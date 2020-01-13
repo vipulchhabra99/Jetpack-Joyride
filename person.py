@@ -1,12 +1,16 @@
 from input import _getChUnix as getChar
 from base_frame import base_frame
 import signal
+import numpy as np
 from alarmexception import AlarmException
 
 class Person:
 
+    positiony = 27
+    positionx = 0
+
     def __init__(self):
-        self.person = [['  ','@@','  '],['--','||','--'],['//',' ','\\\\']]
+        self.person = np.array([['  ','@@','  '],['--','||','--'],['//',' ','\\\\']])
         self.__power = 20
         self.__score = 0
 
@@ -19,12 +23,27 @@ class Person:
 
     def generate_person(self):
 
-        for i in range(3):
-            for j in range(3):
-                base_frame.frame[base_frame.current_frame+27+i][40+j] = self.person[i][j]
+        if(base_frame.current_frame <= self.positionx):
+            base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
+
+        else:
+            base_frame.frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = self.person
 
     def show_life(self):
         return self.__power
+
+    def reset_person(self):
+        if(base_frame.current_frame <= self.positionx):
+            base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = "  "
+
+        else:
+            base_frame.frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = "  "        
+
+    def gravity(self):
+        if(self.positiony < 27):
+            self.reset_person()
+            self.positiony += 1
+
 
     def move_person(self):
         def alarmhandler(signum, frame):
@@ -43,13 +62,35 @@ class Person:
             signal.signal(signal.SIGALRM, signal.SIG_IGN)
             return ''
 
+        def gravity():
+            pass
+
         char = user_input()
 
         # Press 'q' for quit.
         if char == 'q':
             quit()
 
+        if char == 'd':
+            if(self.positionx - base_frame.current_frame < 77):
+                self.reset_person()
+                self.positionx += 1
+        
+        if char == 'w':
+            if(self.positiony > 1):
+                self.reset_person()
+                self.positiony -=1
 
+        if char == 's':
+            if(self.positiony < 27):
+                self.reset_person()
+                self.positiony += 1
+
+        if char == 'a':
+            if(self.positionx - base_frame.current_frame > 0):
+                self.reset_person()
+                self.positionx -= 1
+            
         # Press 'w' for up.
         """if char == 'w' and checkboard(self, Bomberman.bombera,
                                       Bomberman.bomberb - 1) == 'empty':

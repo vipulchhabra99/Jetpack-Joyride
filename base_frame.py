@@ -1,18 +1,18 @@
 import numpy as np
+import random
+
 class base_frame:
 
     current_frame = 0
-    frame = np.array([[""]*4002]*100)
+    frame = np.array([['  ']*1000]*50)
 
     def generate_boundary(self):
-        boundary = np.array(['X']*100)
-        return boundary
+        for i in range(100):
+            self.frame[0][self.current_frame+i] = 'XX'
+        
+        for i in range(100):
+            self.frame[30][self.current_frame+i] = 'XX'
 
-
-    def print_base_frame(self):
-        print()
-        print("         SCORE : ",end = "   ") 
-        print(Frame.show_score(),end = "            ")
 
     def getFrame(self):
         return self.current_frame
