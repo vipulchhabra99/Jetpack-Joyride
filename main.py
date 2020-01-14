@@ -4,6 +4,7 @@ import signal
 from base_frame import base_frame
 from person import Person
 from obstacles import horizontal_obstacle,vertical_obstacle,new_obstacle
+from background import background
 import random
 import sys
 from constraint_checker import *
@@ -15,11 +16,10 @@ Frame = base_frame()
 boundary = Frame.generate_boundary()
 Runner = Person()
 iteration = 0
-ob1 = horizontal_obstacle()
-ob2 = vertical_obstacle()
-ob3 = new_obstacle()
 Runner.place_rewards()
 obstacle_place()
+cloud = background()
+cloud.place_background()
 
 while(True):
     print("\033[0;0f")
@@ -36,16 +36,15 @@ while(True):
 
     print()
 
-    Runner.generate_person()
-    
-    Frame.generate_boundary()
-
-    if(Frame.frame[Runner.positiony][Runner.positionx] == '=' or Frame.frame[Runner.positiony][Runner.positionx] == '|'):
-            print("oye")
-
     for i in range(0,31):
         for j in range(100):
-            print(Frame.frame[i][Frame.current_frame+j],end = "")
+            Frame.user_frame[i][Frame.current_frame+j] = Frame.frame[i][Frame.current_frame+j]
+
+    Runner.generate_person()
+    
+    for i in range(0,31):
+        for j in range(100):
+            print(Frame.user_frame[i][Frame.current_frame+j],end = "")
         print()
 
     print()

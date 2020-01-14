@@ -33,7 +33,7 @@ class Rewards:
                 if(i == j):
                     inter_row.append(self.__coins[0])
                 else:
-                    inter_row.append("  ")
+                    inter_row.append(" ")
             self.__series3.append(inter_row)
         
         self.__series3 = np.array(self.__series3)
@@ -52,7 +52,7 @@ class Rewards:
             i += j
 
             if choice == 1:
-                y = random.randint(2,20)
+                y = random.randint(6,20)
                 base_frame.frame[y:y+3,i:i+8] = self.__series1
                 #for xi in range(3):
                     #for zi in range(8):
@@ -60,7 +60,7 @@ class Rewards:
                         #print(self.__series1[xi][zi])
 
             elif choice == 2:
-                y = random.randint(2,25)
+                y = random.randint(6,23)
 
                 base_frame.frame[y,i:i+8] = self.__series2    
                 #for zi in range(8):
@@ -70,7 +70,7 @@ class Rewards:
                 #base_frame.frame[y:(y+1),i:(i+8)] = self.__series2
 
             elif choice == 3:
-                y = random.randint(2,17)
+                y = random.randint(6,23)
                 #for xi in range(8):
                     #for zi in range(8):
                         #print(self.__series3[xi][zi])

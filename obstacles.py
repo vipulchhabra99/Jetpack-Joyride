@@ -56,7 +56,7 @@ def obstacle_place():
     while(i < 3900):
         j = random.randint(20,30)
         i += j
-        y = random.randint(2,25)
+        y = random.randint(7,25)
         if(np.array_equal(base_frame.frame[y:y+4,i:i+4], empty_array)):
             choice = random.randint(1,3)
 

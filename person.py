@@ -41,11 +41,11 @@ class Person:
     def generate_person(self):
 
         if(base_frame.current_frame < self.positionx):
-            base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
+            base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
 
         else:
             self.positionx = base_frame.current_frame
-            base_frame.frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = self.person
+            base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = self.person
 
     def show_life(self):
         return self.__power
@@ -53,11 +53,11 @@ class Person:
     def reset_person(self):
         if(base_frame.current_frame <= self.positionx):
             #print(base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3])
-            base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = " "
+            base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = " "
 
         else:
             #print(base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3])
-            base_frame.frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = " "        
+            base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = " "        
 
     def gravity(self):
         if(self.positiony < 27):
@@ -132,83 +132,3 @@ class Person:
                 self.positionx -= 1
         else:
             self.__jetflag = 0
-            
-        # Press 'w' for up.
-        """if char == 'w' and checkboard(self, Bomberman.bombera,
-                                      Bomberman.bomberb - 1) == 'empty':
-            if checkboard(self, Bomberman.bombera,
-                          Bomberman.bomberb) != 'bomb':
-                for j in range(0, 4):
-                    Board.board[(Bomberman.bomberb + 1) *
-                                2][(Bomberman.bombera + 1) * 4 + j] = ' '
-                    Board.board[(Bomberman.bomberb + 1) * 2 +
-                                1][(Bomberman.bombera + 1) * 4 + j] = ' '
-
-            Bomberman.bomberb = Bomberman.bomberb - 1
-
-            for j in range(0, 4):
-                Board.board[(Bomberman.bomberb + 1) *
-                            2][(Bomberman.bombera + 1) * 4 + j] = 'B'
-                Board.board[(Bomberman.bomberb + 1) * 2 +
-                            1][(Bomberman.bombera + 1) * 4 + j] = 'B'
-
-        # Press 's' for down.
-        if char == 's' and checkboard(self, Bomberman.bombera,
-                                      Bomberman.bomberb + 1) == 'empty':
-            if checkboard(self, Bomberman.bombera,
-                          Bomberman.bomberb) != 'bomb':
-                for j in range(0, 4):
-                    Board.board[(Bomberman.bomberb + 1) *
-                                2][(Bomberman.bombera + 1) * 4 + j] = ' '
-                    Board.board[(Bomberman.bomberb + 1) * 2 +
-                                1][(Bomberman.bombera + 1) * 4 + j] = ' '
-
-            Bomberman.bomberb = Bomberman.bomberb + 1
-
-            for j in range(0, 4):
-                Board.board[(Bomberman.bomberb + 1) *
-                            2][(Bomberman.bombera + 1) * 4 + j] = 'B'
-                Board.board[(Bomberman.bomberb + 1) * 2 +
-                            1][(Bomberman.bombera + 1) * 4 + j] = 'B'
-
-        # Press 'a' for left.
-        if char == 'a' and checkboard(self,
-                                      Bomberman.bombera - 1,
-                                      Bomberman.bomberb) == 'empty':
-            if checkboard(self, Bomberman.bombera,
-                          Bomberman.bomberb) != 'bomb':
-                for j in range(0, 4):
-                    Board.board[(Bomberman.bomberb + 1) *
-                                2][(Bomberman.bombera + 1) * 4 + j] = ' '
-                    Board.board[(Bomberman.bomberb + 1) * 2 +
-                                1][(Bomberman.bombera + 1) * 4 + j] = ' '
-
-            Bomberman.bombera = Bomberman.bombera - 1
-
-            for j in range(0, 4):
-                Board.board[(Bomberman.bomberb + 1) *
-                            2][(Bomberman.bombera + 1) * 4 + j] = 'B'
-                Board.board[(Bomberman.bomberb + 1) * 2 +
-                            1][(Bomberman.bombera + 1) * 4 + j] = 'B'
-
-        # Press 'd' for right.
-        if char == 'd' and checkboard(self,
-                                      Bomberman.bombera + 1,
-                                      Bomberman.bomberb) == 'empty':
-            if checkboard(self, Bomberman.bombera,
-                          Bomberman.bomberb) != 'bomb':
-                for j in range(0, 4):
-                    Board.board[(Bomberman.bomberb + 1) *
-                                2][(Bomberman.bombera + 1) * 4 + j] = ' '
-                    Board.board[(Bomberman.bomberb + 1) * 2 +
-                                1][(Bomberman.bombera + 1) * 4 + j] = ' '
-
-            Bomberman.bombera = Bomberman.bombera + 1
-
-            for j in range(0, 4):
-                Board.board[(Bomberman.bomberb + 1) *
-                            2][(Bomberman.bombera + 1) * 4 + j] = 'B'
-                Board.board[(Bomberman.bomberb + 1) * 2 +
-                            1][(Bomberman.bombera + 1) * 4 + j] = 'B'
-
-                """
