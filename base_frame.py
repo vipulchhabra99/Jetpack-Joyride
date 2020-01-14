@@ -4,14 +4,14 @@ import random
 class base_frame:
 
     current_frame = 0
-    frame = np.array([['  ']*1000]*50)
+    frame = np.array([[' ']*4500]*50)
 
     def generate_boundary(self):
-        for i in range(100):
-            self.frame[0][self.current_frame+i] = 'XX'
+        for i in range(4000):
+            self.frame[0][self.current_frame+i] = 'X'
         
-        for i in range(100):
-            self.frame[30][self.current_frame+i] = 'XX'
+        for i in range(4000):
+            self.frame[30][self.current_frame+i] = 'X'
 
 
     def getFrame(self):
