@@ -6,6 +6,31 @@ from rewards import Rewards
 from alarmexception import AlarmException
 from constraint_checker import *
 
+class Bullet:
+    
+    def __init__(self,x,y):
+        self.__x = x
+        self.__y = y
+        self.bullet = '*'
+        self.veocityx = 2
+
+    def on_frame(self,x):
+        base_frame.user_frame[self.__y][x] = self.bullet
+
+    def forward(self):
+        self.__x += self.veocityx
+
+    def get_x(self):
+        return self.__x
+
+    def get_y(self):
+        return self.__y
+
+    def detect_collision(self):
+        if(bullet_collision(self.__y,self.__x) == 2):
+            print("collision detected")
+
+
 class Person:
 
     positiony = 27
@@ -17,6 +42,7 @@ class Person:
         self.__score = 0
         self.__shield = 0
         self.__jetflag = 0
+        self.__bulletflag = 0
         self.rew = Rewards()
 
     def show_score(self):
@@ -37,6 +63,7 @@ class Person:
 
     def place_rewards(self):
         self.rew.board_place()
+
 
     def generate_person(self):
 
@@ -130,5 +157,9 @@ class Person:
                 self.reset_person()
                 self.__jetflag = 0
                 self.positionx -= 1
+        elif char == 'b':
+            self.__jetflag = 0
+            base_frame.bullets.append(Bullet(self.positionx+1,self.positiony+1))
+
         else:
             self.__jetflag = 0

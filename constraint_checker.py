@@ -59,3 +59,8 @@ def check_obstacle(posx,posy):
         for j in range(3):
             if([posx+i,posy+j] in Obstacles.placements):
                 return 2
+
+def bullet_collision(posx,posy):
+
+    if([posx,posy] in Obstacles.placements):
+        quit()

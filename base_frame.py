@@ -6,6 +6,7 @@ class base_frame:
     current_frame = 0
     frame = np.array([[' ']*4500]*50)
     user_frame = np.array([[' ']*4500]*50)
+    bullets = []
 
     def generate_boundary(self):
         for i in range(4000):
@@ -17,4 +18,6 @@ class base_frame:
 
     def getFrame(self):
         return self.current_frame
+
+
 

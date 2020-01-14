@@ -42,7 +42,8 @@ class new_obstacle(Obstacles):
         
         for i in range(3):
             for j in range(3):
-                base_frame.frame[posx+i][posy+j] = ' '
+                if(i == j):
+                    base_frame.frame[posx+i][posy+j] = ' '
 
 
 def obstacle_place():
@@ -69,7 +70,7 @@ def obstacle_place():
             elif(choice == 2):
                 #base_frame[y:y+3,i+1:i+1] = ob2.obstacle[0:3,0:0]
                 for zi in range(3):
-                    Obstacles.placements.append([y+1,i+zi])
+                    Obstacles.placements.append([y+zi,i+1])
                     base_frame.frame[y+zi][i+1] = ob2.obstacle[zi][0]
 
             elif(choice == 3):

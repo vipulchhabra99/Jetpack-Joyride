@@ -70,7 +70,7 @@ class Rewards:
                 #base_frame.frame[y:(y+1),i:(i+8)] = self.__series2
 
             elif choice == 3:
-                y = random.randint(6,23)
+                y = random.randint(6,20)
                 #for xi in range(8):
                     #for zi in range(8):
                         #print(self.__series3[xi][zi])
