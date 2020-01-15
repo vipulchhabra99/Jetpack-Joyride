@@ -38,7 +38,7 @@ class Rewards:
         
         self.__series3 = np.array(self.__series3)
 
-    def board_place(self):
+    def board_place(self,Frame):
 
         self.generate_series()
         
@@ -48,12 +48,12 @@ class Rewards:
         while(i < 3900):
             
             choice = random.randint(1, 3)
-            j = random.randint(30,40)
+            j = random.randint(10,30)
             i += j
 
             if choice == 1:
                 y = random.randint(6,20)
-                base_frame.frame[y:y+3,i:i+8] = self.__series1
+                Frame.frame[y:y+3,i:i+8] = self.__series1
                 #for xi in range(3):
                     #for zi in range(8):
                         #base_frame.frame[y+xi][i+zi] = self.__series1[xi][zi]
@@ -62,7 +62,7 @@ class Rewards:
             elif choice == 2:
                 y = random.randint(6,23)
 
-                base_frame.frame[y,i:i+8] = self.__series2    
+                Frame.frame[y,i:i+8] = self.__series2    
                 #for zi in range(8):
                     #print(self.__series2[zi])
 
@@ -75,5 +75,5 @@ class Rewards:
                     #for zi in range(8):
                         #print(self.__series3[xi][zi])
                         #base_frame.frame[y+xi][i+zi] = self.__series3[xi][zi]
-                base_frame.frame[y:(y+8),i:(i+8)] = self.__series3
+                Frame.frame[y:(y+8),i:(i+8)] = self.__series3
 

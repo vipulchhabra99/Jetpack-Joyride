@@ -4,9 +4,10 @@ import random
 
 class background:
 
-    clouds = np.array([[' ','@','@',' '],['@','@','@','@']])
+    def __init__(self):
+        self.clouds = np.array([[' ','@','@',' '],['@','@','@','@']])
 
-    def place_background(self):
+    def place_background(self,Frame):
         
         i = random.randint(20,30)
 
@@ -14,4 +15,4 @@ class background:
             j = random.randint(40,50)
             i += j
             y = random.randint(1,3)
-            base_frame.frame[y+1:y+3,i+1:i+5] = self.clouds
+            Frame.frame[y+1:y+3,i+1:i+5] = self.clouds

@@ -2,7 +2,7 @@ from base_frame import base_frame
 import numpy as np
 from obstacles import Obstacles
 
-def check_constraint(posx, posy):
+def check_constraint(posx, posy,base_frame):
 
     score = 0
 
@@ -53,14 +53,20 @@ def check_constraint(posx, posy):
     
     return score
 
-def check_obstacle(posx,posy):
+def check_obstacle(posx,posy,Frame):
 
-    for i in range(3):
-        for j in range(3):
-            if([posx+i,posy+j] in Obstacles.placements):
-                return 2
-
-def bullet_collision(posx,posy):
-
-    if([posx,posy] in Obstacles.placements):
-        quit()
+    for obs in Frame.obstacles_placed:
+        for i in range(3):
+            for j in range(3):
+                if(obs[3].check_status() is True and [posx+i,posy+j] in obs[0:3]):
+                    print(obs[3].check_status())
+                    print(posx,posy)
+                    print(obs[0:3])
+                    return 2
+    
+                
+def bullet_collision(posx,posy,Frame):
+    for obs in Frame.obstacles_placed:
+        if([posx,posy] in obs[0:3] or [posx,posy-1] in obs[0:3] or [posx,posy+1] in obs[0:3]):
+            obs[3].change_status(obs[3].get_x(),obs[3].get_y(),Frame)
+            return 2

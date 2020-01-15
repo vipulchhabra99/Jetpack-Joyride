@@ -13,9 +13,10 @@ class Bullet:
         self.__y = y
         self.bullet = '*'
         self.veocityx = 2
+        self.status = True
 
-    def on_frame(self,x):
-        base_frame.user_frame[self.__y][x] = self.bullet
+    def on_frame(self,x,Frame):
+        Frame.user_frame[self.__y][x] = self.bullet
 
     def forward(self):
         self.__x += self.veocityx
@@ -25,10 +26,14 @@ class Bullet:
 
     def get_y(self):
         return self.__y
+    
+    def bullet_remove(self,Frame):
+        Frame.user_frame[self.__y][self.__x] = ' '
+        self.status = False
 
-    def detect_collision(self):
-        if(bullet_collision(self.__y,self.__x) == 2):
-            print("collision detected")
+    def detect_collision(self,Frame):
+        if(bullet_collision(self.__y,self.__x,Frame) == 2):
+            self.bullet_remove(Frame)
 
 
 class Person:
@@ -61,11 +66,11 @@ class Person:
     def show_flag(self):
         return self.__jetflag
 
-    def place_rewards(self):
-        self.rew.board_place()
+    def place_rewards(self,Frame):
+        self.rew.board_place(Frame)
 
 
-    def generate_person(self):
+    def generate_person(self,base_frame):
 
         if(base_frame.current_frame < self.positionx):
             base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
@@ -77,7 +82,7 @@ class Person:
     def show_life(self):
         return self.__power
 
-    def reset_person(self):
+    def reset_person(self,base_frame):
         if(base_frame.current_frame <= self.positionx):
             #print(base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3])
             base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = " "
@@ -86,17 +91,17 @@ class Person:
             #print(base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3])
             base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = " "        
 
-    def gravity(self):
+    def gravity(self,Frame):
         if(self.positiony < 27):
-            if(check_obstacle(self.positiony+1,self.positionx)):
+            if(check_obstacle(self.positiony+1,self.positionx,Frame)):
                 print("GAME OVER !")
                 quit()
-            self.__score += check_constraint(self.positiony+1,self.positionx)
-            self.reset_person()
+            self.__score += check_constraint(self.positiony+1,self.positionx,Frame)
+            self.reset_person(Frame)
             self.positiony += 1
 
 
-    def move_person(self):
+    def move_person(self,Frame):
         def alarmhandler(signum, frame):
             raise AlarmException
 
@@ -120,46 +125,46 @@ class Person:
             quit()
 
         elif char == 'd':
-            if(self.positionx - base_frame.current_frame < 97):
-                if(check_obstacle(self.positiony,self.positionx+1)):
+            if(self.positionx - Frame.current_frame < 97):
+                if(check_obstacle(self.positiony,self.positionx+1,Frame)):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.positiony,self.positionx+1)
-                self.reset_person()
+                self.__score += check_constraint(self.positiony,self.positionx+1,Frame)
+                self.reset_person(Frame)
                 self.__jetflag = 0
                 self.positionx += 1
         
         elif char == 'w':
             if(self.positiony > 1):
-                if(check_obstacle(self.positiony-1,self.positionx)):
+                if(check_obstacle(self.positiony-1,self.positionx,Frame)):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.positiony-1,self.positionx)                
-                self.reset_person()
+                self.__score += check_constraint(self.positiony-1,self.positionx,Frame)                
+                self.reset_person(Frame)
                 self.positiony -=1
                 self.__jetflag = 1
 
         elif char == 's':
             if(self.positiony < 27):
-                if(check_obstacle(self.positiony+1,self.positionx)):
+                if(check_obstacle(self.positiony+1,self.positionx,Frame)):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.positiony+1,self.positionx)
-                self.reset_person()
+                self.__score += check_constraint(self.positiony+1,self.positionx,Frame)
+                self.reset_person(Frame)
                 self.positiony += 1
 
         elif char == 'a':
-            if(self.positionx - base_frame.current_frame > 0):
-                if(check_obstacle(self.positiony,self.positionx-1)):
+            if(self.positionx - Frame.current_frame > 0):
+                if(check_obstacle(self.positiony,self.positionx-1,Frame)):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.positiony,self.positionx-1)               
-                self.reset_person()
+                self.__score += check_constraint(self.positiony,self.positionx-1,Frame)               
+                self.reset_person(Frame)
                 self.__jetflag = 0
                 self.positionx -= 1
         elif char == 'b':
             self.__jetflag = 0
-            base_frame.bullets.append(Bullet(self.positionx+1,self.positiony+1))
+            Frame.bullets.append(Bullet(self.positionx+1,self.positiony+1))
 
         else:
             self.__jetflag = 0

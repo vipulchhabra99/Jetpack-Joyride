@@ -3,10 +3,12 @@ import random
 
 class base_frame:
 
-    current_frame = 0
-    frame = np.array([[' ']*4500]*50)
-    user_frame = np.array([[' ']*4500]*50)
-    bullets = []
+    def __init__(self):
+        self.current_frame = 0
+        self.frame = np.array([[' ']*4500]*50)
+        self.user_frame = np.array([[' ']*4500]*50)
+        self.bullets = []
+        self.obstacles_placed = []
 
     def generate_boundary(self):
         for i in range(4000):

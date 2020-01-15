@@ -11,22 +11,23 @@ from constraint_checker import *
 from obstacles import *
 np.set_printoptions(threshold=sys.maxsize)
 
-def bullet_printer():
+def bullet_printer(base_frame):
     for bullet in base_frame.bullets:
-        if(base_frame.current_frame <= bullet.get_x() < base_frame.current_frame+100):
+        if(base_frame.current_frame <= bullet.get_x() < base_frame.current_frame+100 and bullet.status == True):
             bullet.forward()
-            bullet.on_frame(bullet.get_x())
-            bullet.detect_collision()
+            bullet.detect_collision(base_frame)
+            #print(bullet.get_x())
+            bullet.on_frame(bullet.get_x(),base_frame)
 
 
 Frame = base_frame()
 boundary = Frame.generate_boundary()
 Runner = Person()
 iteration = 0
-Runner.place_rewards()
-obstacle_place()
+Runner.place_rewards(Frame)
+obstacle_place(Frame)
 cloud = background()
-cloud.place_background()
+cloud.place_background(Frame)
 
 while(True):
     print("\033[0;0f")
@@ -47,8 +48,8 @@ while(True):
         for j in range(100):
             Frame.user_frame[i][Frame.current_frame+j] = Frame.frame[i][Frame.current_frame+j]
 
-    Runner.generate_person()
-    bullet_printer()
+    Runner.generate_person(Frame)
+    bullet_printer(Frame)
     
     for i in range(0,31):
         for j in range(100):
@@ -58,31 +59,20 @@ while(True):
     print()
 
     if(Frame.current_frame >= Runner.positionx):
-        Runner.reset_person()
-    '''if(iteration%30 == 0):
-        x = random.randint(0,2)
-
-        if(x == 0):
-            ob1.place_obstacles()
-
-        if(x == 1):
-            ob2.place_obstacles()
-
-        if(x == 2):
-            ob3.place_obstacles()'''
+        Runner.reset_person(Frame)
 
     #Frame.place_obstacles()
     #score = check_constraint(Runner.positiony,Runner.positionx)
     #print(score)
     #Runner.check_score(score)
-    Runner.move_person()
+    Runner.move_person(Frame)
     #os.system('clear')
     iteration += 1
     if(iteration%7 == 0):
-        base_frame.current_frame += 1;
+        Frame.current_frame += 1;
     
     if(iteration%(1.5) == 0 and Runner.show_flag() == 0):
-        Runner.gravity()
+        Runner.gravity(Frame)
     #print("\033[1;0H")
 
 
