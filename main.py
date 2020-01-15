@@ -19,15 +19,25 @@ def bullet_printer(base_frame):
             #print(bullet.get_x())
             bullet.on_frame(bullet.get_x(),base_frame)
 
+def magnet_printer(magnet,frame):
+    magnet.magnet_on_frame(frame)
+        
+
 
 Frame = base_frame()
 boundary = Frame.generate_boundary()
 Runner = Person()
 iteration = 0
 Runner.place_rewards(Frame)
+Runner.place_speedboost(Frame)
 obstacle_place(Frame)
 cloud = background()
 cloud.place_background(Frame)
+magnet = Magnet(random.randint(110,120),2)
+mag_loc = magnet.get_x()
+Runner.magnetlocx = magnet.get_x()
+magnet_period = 0
+boost_check = 0
 
 while(True):
     print("\033[0;0f")
@@ -50,7 +60,30 @@ while(True):
 
     Runner.generate_person(Frame)
     bullet_printer(Frame)
+
+    if(Frame.current_frame <= mag_loc < Frame.current_frame+80 and magnet_period < 300):
+        magnet_printer(magnet,Frame)
+        Runner.set_magnet()
+        magnet_period += 1
+        
+        if(Runner.check_boost() == True and boost_check < 200):
+            if(iteration % 2 == 0):
+                magnet.forward()
+                Runner.magnetlocx = magnet.get_x()
+                Runner.positionx = magnet.get_x()
     
+
+        else:
+            if(iteration % 6 == 0):
+                magnet.forward()
+                Runner.magnetlocx = magnet.get_x()
+                Runner.positionx = magnet.get_x()
+
+    if(magnet_period > 300):
+        Runner.reset_magnet()
+
+        
+
     for i in range(0,31):
         for j in range(100):
             print(Frame.user_frame[i][Frame.current_frame+j],end = "")
@@ -61,6 +94,19 @@ while(True):
     if(Frame.current_frame >= Runner.positionx):
         Runner.reset_person(Frame)
 
+    if(Runner.show_shield() < 20 and Runner.check_shield() == False):
+        if(iteration % 6 == 0):
+            Runner.increase_shield()
+
+    elif(Runner.show_shield() == 0 and Runner.check_shield() == True):
+        Runner.deactivate_shield()
+
+    elif(Runner.check_shield() == True):
+        if(iteration % 2 == 0):
+            Runner.decrease_shield()
+
+        
+
     #Frame.place_obstacles()
     #score = check_constraint(Runner.positiony,Runner.positionx)
     #print(score)
@@ -68,8 +114,18 @@ while(True):
     Runner.move_person(Frame)
     #os.system('clear')
     iteration += 1
-    if(iteration%7 == 0):
-        Frame.current_frame += 1;
+
+    #print(Runner.check_boost())
+
+    if(Runner.check_boost() == True and boost_check < 200):
+        if(iteration % 2 == 0):
+            Frame.current_frame += 1
+        boost_check += 1
+    else:
+        boost_check = 0
+        Runner.change_boostflag()
+        if(iteration%6 == 0):
+            Frame.current_frame += 1
     
     if(iteration%(1.5) == 0 and Runner.show_flag() == 0):
         Runner.gravity(Frame)

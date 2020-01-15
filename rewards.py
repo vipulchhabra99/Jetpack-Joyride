@@ -2,6 +2,21 @@ from base_frame import base_frame
 import random
 import numpy as np
 
+class speed_boost:
+    
+    def __init__(self):
+        self.boost = 'S'
+
+    def place_boost(self,Frame):
+            
+        i = 0
+        while(i < 3500):
+            j = random.randint(50, 70)
+            i += j
+            y = random.randint(4,25)
+            if(Frame.frame[y][i] == ' '):
+                Frame.frame[y][i] = self.boost
+
 class Rewards: 
 
     def __init__(self):

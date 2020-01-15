@@ -62,6 +62,19 @@ class new_obstacle(Obstacles):
             base_frame.frame[posx+i][posy+i] = ' '
             base_frame.user_frame[posx+i][posy+i] = ' '
 
+class Magnet(Obstacles):
+
+    def __init__(self,x,y):
+        self.magnet = np.array([['|','=','|'],['|',' ','|']])
+        Obstacles.__init__(self,x,y)
+
+    def magnet_on_frame(self,Frame):
+        for i in range(2):
+            for j in range(3):
+                Frame.user_frame[self.locy+i][self.locx+j] = self.magnet[i][j]
+
+    def forward(self):
+        self.locx += 1
 
 
 def obstacle_place(Frame):

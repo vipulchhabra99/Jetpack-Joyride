@@ -2,7 +2,7 @@ from input import _getChUnix as getChar
 from base_frame import base_frame
 import signal
 import numpy as np
-from rewards import Rewards
+from rewards import *
 from alarmexception import AlarmException
 from constraint_checker import *
 
@@ -48,7 +48,33 @@ class Person:
         self.__shield = 0
         self.__jetflag = 0
         self.__bulletflag = 0
+        self.__magnetflag = False
+        self.__boost = False
+        self.magnetposx = 0
         self.rew = Rewards()
+        self.__shield_activate = False
+        self.spboost = speed_boost()
+
+    def deactivate_shield(self):
+        self.__shield_activate = False
+
+    def check_shield(self):
+        return self.__shield_activate
+
+    def show_shield(self):
+        return self.__shield
+
+    def decrease_shield(self):
+        self.__shield -= 1
+
+    def increase_shield(self):
+        self.__shield += 1
+
+    def check_boost(self):
+        return self.__boost
+
+    def change_boostflag(self):
+        self.__boost = False
 
     def show_score(self):
         scr = self.__score
@@ -57,11 +83,16 @@ class Person:
     def check_score(self,score):
         self.__score += score
 
-    def increase_shield(self):
-        self.__shield += 1
+    def set_magnet(self):
+        self.__magnetflag = True
+
+    def reset_magnet(self):
+        self.__magnetflag = False
     
-    def show_shield(self):
-        return self.__shield
+    def check_magnet_flag(self):
+        return self.__magnetflag
+    
+    
 
     def show_flag(self):
         return self.__jetflag
@@ -69,15 +100,18 @@ class Person:
     def place_rewards(self,Frame):
         self.rew.board_place(Frame)
 
+    def place_speedboost(self,Frame):
+        self.spboost.place_boost(Frame)
+
 
     def generate_person(self,base_frame):
 
-        if(base_frame.current_frame < self.positionx):
-            base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
+            if(base_frame.current_frame < self.positionx):
+                base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
 
-        else:
-            self.positionx = base_frame.current_frame
-            base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = self.person
+            else:
+                self.positionx = base_frame.current_frame
+                base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = self.person
 
     def show_life(self):
         return self.__power
@@ -93,10 +127,12 @@ class Person:
 
     def gravity(self,Frame):
         if(self.positiony < 27):
-            if(check_obstacle(self.positiony+1,self.positionx,Frame)):
+            if(check_obstacle(self.positiony+1,self.positionx,Frame) and self.__shield_activate is False):
                 print("GAME OVER !")
                 quit()
             self.__score += check_constraint(self.positiony+1,self.positionx,Frame)
+            if(speedboost_check(self.positiony+1,self.positionx,Frame)):
+                self.__boost = True
             self.reset_person(Frame)
             self.positiony += 1
 
@@ -126,45 +162,58 @@ class Person:
 
         elif char == 'd':
             if(self.positionx - Frame.current_frame < 97):
-                if(check_obstacle(self.positiony,self.positionx+1,Frame)):
+                if(check_obstacle(self.positiony,self.positionx+1,Frame) and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
                 self.__score += check_constraint(self.positiony,self.positionx+1,Frame)
+                if(speedboost_check(self.positiony,self.positionx+1,Frame)):
+                    self.__boost = True
                 self.reset_person(Frame)
                 self.__jetflag = 0
                 self.positionx += 1
         
         elif char == 'w':
             if(self.positiony > 1):
-                if(check_obstacle(self.positiony-1,self.positionx,Frame)):
+                if(check_obstacle(self.positiony-1,self.positionx,Frame) and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.positiony-1,self.positionx,Frame)                
+                self.__score += check_constraint(self.positiony-1,self.positionx,Frame)
+                if(speedboost_check(self.positiony-1,self.positionx,Frame)):
+                    self.__boost = True                                
                 self.reset_person(Frame)
                 self.positiony -=1
                 self.__jetflag = 1
 
         elif char == 's':
             if(self.positiony < 27):
-                if(check_obstacle(self.positiony+1,self.positionx,Frame)):
+                if(check_obstacle(self.positiony+1,self.positionx,Frame) and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
                 self.__score += check_constraint(self.positiony+1,self.positionx,Frame)
+                if(speedboost_check(self.positiony+1,self.positionx,Frame)):
+                    self.__boost = True 
                 self.reset_person(Frame)
                 self.positiony += 1
 
         elif char == 'a':
             if(self.positionx - Frame.current_frame > 0):
-                if(check_obstacle(self.positiony,self.positionx-1,Frame)):
+                if(check_obstacle(self.positiony,self.positionx-1,Frame) and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
                 self.__score += check_constraint(self.positiony,self.positionx-1,Frame)               
+                if(speedboost_check(self.positiony,self.positionx-1,Frame)):
+                    self.__boost = True                
                 self.reset_person(Frame)
                 self.__jetflag = 0
                 self.positionx -= 1
         elif char == 'b':
             self.__jetflag = 0
             Frame.bullets.append(Bullet(self.positionx+1,self.positiony+1))
+
+        elif char.isspace():
+            self.__jetflag = 0
+            if(self.__shield == 20):
+                self.__shield_activate = True
 
         else:
             self.__jetflag = 0
