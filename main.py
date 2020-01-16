@@ -9,6 +9,7 @@ import random
 import sys
 from constraint_checker import *
 from obstacles import *
+from config import *
 np.set_printoptions(threshold=sys.maxsize)
 
 def bullet_printer(base_frame):
@@ -33,13 +34,14 @@ Runner.place_speedboost(Frame)
 obstacle_place(Frame)
 cloud = background()
 cloud.place_background(Frame)
-magnet = Magnet(random.randint(110,120),2)
+magnet = Magnet(random.randint(MAGNET_LOCATION_MIN,MAGNET_LOCATION_MAX),MAGNET_LOC_Y)
 mag_loc = magnet.get_x()
 Runner.magnetlocx = magnet.get_x()
 magnet_period = 0
 boost_check = 0
+enemy = Enemy()
 
-while(True):
+while(Frame.getGameRun()):
     print("\033[0;0f")
     print()
     print()
@@ -50,12 +52,11 @@ while(True):
     print("      SHIELD : ",Runner.show_shield(),end = '    ')
     print("    TIME REMAINING : ",0)
     
-
-
     print()
 
-    for i in range(0,31):
-        for j in range(100):
+
+    for i in range(TOTAL_WIDTH):
+        for j in range(FRAME_PER_SCENE):
             Frame.user_frame[i][Frame.current_frame+j] = Frame.frame[i][Frame.current_frame+j]
 
     Runner.generate_person(Frame)
@@ -82,10 +83,12 @@ while(True):
     if(magnet_period > 300):
         Runner.reset_magnet()
 
-        
+    if(Frame.current_frame > 50):
+        enemy.place_dragon(Frame,Runner)
 
-    for i in range(0,31):
-        for j in range(100):
+
+    for i in range(TOTAL_WIDTH):
+        for j in range(FRAME_PER_SCENE):
             print(Frame.user_frame[i][Frame.current_frame+j],end = "")
         print()
 
@@ -118,13 +121,13 @@ while(True):
     #print(Runner.check_boost())
 
     if(Runner.check_boost() == True and boost_check < 200):
-        if(iteration % 2 == 0):
+        if(iteration % 2 == 0 and Frame.current_frame < STATIC_FRAME):
             Frame.current_frame += 1
         boost_check += 1
     else:
         boost_check = 0
         Runner.change_boostflag()
-        if(iteration%6 == 0):
+        if(iteration%5 == 0 and Frame.current_frame < STATIC_FRAME):
             Frame.current_frame += 1
     
     if(iteration%(1.5) == 0 and Runner.show_flag() == 0):

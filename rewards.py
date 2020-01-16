@@ -1,6 +1,7 @@
 from base_frame import base_frame 
 import random
 import numpy as np
+from config import *
 
 class speed_boost:
     
@@ -10,7 +11,7 @@ class speed_boost:
     def place_boost(self,Frame):
             
         i = 0
-        while(i < 3500):
+        while(i < TOTAL_GAME_FRAME - 70):
             j = random.randint(50, 70)
             i += j
             y = random.randint(4,25)
@@ -60,7 +61,7 @@ class Rewards:
         i = 10
         j = 0
 
-        while(i < 3900):
+        while(i < TOTAL_GAME_FRAME-100):
             
             choice = random.randint(1, 3)
             j = random.randint(10,30)
