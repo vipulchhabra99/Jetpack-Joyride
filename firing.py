@@ -42,20 +42,20 @@ class Iceballs:
         self.__x = x
         self.__y = y
         self.__iceballs= '#'
-        self.status = True
-        self.velocity = ICE_BALL_VELOCITY
+        self.__status = True
+        self.__velocity = ICE_BALL_VELOCITY
 
     def get_x(self):
         return self.__x
 
     def get_status(self):
-        return self.status
+        return self.__status
 
     def on_frame(self,Frame):
         Frame.user_frame[self.__y][self.__x] = self.__iceballs
 
     def forward(self):
-        self.__x -= ICE_BALL_VELOCITY
+        self.__x -= self.__velocity
 
     def check_collision(self,Frame,Person):
         if(iceball_collision(self.__y,self.__x,Frame,Person) == 2):
