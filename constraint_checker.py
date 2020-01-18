@@ -62,7 +62,7 @@ def check_obstacle(posx,posy,Frame):
                     return 2
     
                 
-def bullet_collision(posx,posy,Frame):
+def bullet_collision(posx,posy,Frame,Enemy):
     for obs in Frame.obstacles_placed:
         if(obs[3].check_status() is True and ([posx,posy] in obs[0:3] or [posx,posy-1] in obs[0:3] or [posx,posy+1] in obs[0:3])):
             obs[3].change_status(obs[3].get_x(),obs[3].get_y(),Frame)
@@ -74,6 +74,13 @@ def iceball_collision(posx,posy,Frame,Person):
         for j in range(3):
             if((Person.positiony+i) == posx and (Person.positionx+j) == posy):
                 return 2
+
+def dragon_bullet(posx,posy,Enemy):
+
+    for i in range(8):
+        for j in range(30):
+            if(Enemy.positiony+i == posy and Enemy.positionx+j == posx):
+                return 3
 
 def speedboost_check(posx,posy,Frame):
 

@@ -15,11 +15,11 @@ from colorama import Fore, Back, Style
 
 np.set_printoptions(threshold=sys.maxsize)
 
-def bullet_printer(base_frame):
+def bullet_printer(base_frame,Enemy):
     for bullet in base_frame.bullets:
         if(base_frame.current_frame <= bullet.get_x() < base_frame.current_frame+100 and bullet.status == True):
             bullet.forward()
-            bullet.detect_collision(base_frame)
+            bullet.detect_collision(base_frame,Enemy)
             #print(bullet.get_x())
             bullet.on_frame(bullet.get_x(),base_frame)
 
@@ -28,7 +28,7 @@ def magnet_printer(magnet,frame):
 
 def ice_ball_printer(Frame,Runner):
     for ice_ball in Frame.ice_balls:
-        if(ice_ball.get_x() > STATIC_FRAME-FRAME_PER_SCENE):
+        if(ice_ball.get_status() == True and ice_ball.get_x() > STATIC_FRAME-FRAME_PER_SCENE):
             ice_ball.forward()
             ice_ball.check_collision(Frame,Runner)
             ice_ball.on_frame(Frame)
@@ -49,7 +49,7 @@ magnet_period = 0
 boost_check = 0
 enemy = Enemy()
 
-while(Frame.getGameRun()):
+while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     print("\033[0;0f")
     print()
     print()
@@ -58,7 +58,7 @@ while(Frame.getGameRun()):
     print("      LIFE : ",end = "    ")
     print(Runner.show_life(),end = "        ")
     print("      SHIELD : ",Runner.show_shield(),end = '    ')
-    print("    TIME REMAINING : ",0)
+    print("    TIME REMAINING : ",Frame.get_time())
     
     print()
 
@@ -67,8 +67,8 @@ while(Frame.getGameRun()):
         for j in range(FRAME_PER_SCENE):
             Frame.user_frame[i][Frame.current_frame+j] = Frame.frame[i][Frame.current_frame+j]
 
-    Runner.generate_person(Frame)
-    bullet_printer(Frame)
+    Runner.generate_person(Frame,enemy)
+    bullet_printer(Frame,enemy)
 
     if(Frame.current_frame <= mag_loc < Frame.current_frame+80 and magnet_period < 300):
         magnet_printer(magnet,Frame)
@@ -112,7 +112,7 @@ while(Frame.getGameRun()):
                     print('\u001b[38;5;50m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
 
                 elif(Frame.user_frame[i][Frame.current_frame+j] == '$'):
-                    print('\u001b[33;1m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+                    print('\u001b[38;5;226m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
 
                 elif(Frame.user_frame[i][Frame.current_frame+j] == '|' or Frame.user_frame[i][Frame.current_frame+j] == '='):
                     print('\u001b[38;5;202m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
@@ -120,12 +120,17 @@ while(Frame.getGameRun()):
                 elif(Frame.user_frame[i][Frame.current_frame+j] == 'S'):
                     print('\u001b[32;1m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
 
+                elif(Frame.user_frame[i][Frame.current_frame+j] == '*'):
+                    print('\u001b[38;5;172m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+
+                elif(Frame.user_frame[i][Frame.current_frame+j] == '#'):
+                    print('\u001b[38;5;50m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+
                 elif(Frame.current_frame+j >= DRAGON_PLACE_X):
                     print('\u001b[32;1m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
 
                 else:
                     print(Fore.WHITE+Frame.user_frame[i][Frame.current_frame+j],end = "")
-
         print()
 
     print()
@@ -152,17 +157,20 @@ while(Frame.getGameRun()):
     if(Runner.check_boost() == True and boost_check < 200):
         if(iteration % 2 == 0 and Frame.current_frame < STATIC_FRAME):
             Frame.current_frame += 1
+            Frame.decrease_time()
         boost_check += 1
     else:
         boost_check = 0
         Runner.change_boostflag()
         if(iteration%5 == 0 and Frame.current_frame < STATIC_FRAME):
             Frame.current_frame += 1
+            Frame.decrease_time()
     
     if(iteration%(1.5) == 0 and Runner.show_flag() == 0):
         Runner.gravity(Frame)
     #print("\033[1;0H")
 
 
-
+print("GAME OVER !")
+quit()
 

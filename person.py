@@ -32,10 +32,15 @@ class Bullet:
         Frame.user_frame[self.__y][self.__x] = ' '
         self.status = False
 
-    def detect_collision(self,Frame):
-        if(bullet_collision(self.__y,self.__x,Frame) == 2):
+    def detect_collision(self,Frame,Enemy):
+        if(bullet_collision(self.__y,self.__x,Frame,Enemy) == 2):
             self.bullet_remove(Frame)
 
+        else:
+            if(dragon_bullet(self.__x,self.__y,Enemy) == 3):
+                self.bullet_remove(Frame)
+                Enemy.decrease_life()
+        
 
 class Person:
 
@@ -93,8 +98,6 @@ class Person:
     def check_magnet_flag(self):
         return self.__magnetflag
     
-    
-
     def show_flag(self):
         return self.__jetflag
 
@@ -105,8 +108,19 @@ class Person:
         self.spboost.place_boost(Frame)
 
 
-    def generate_person(self,base_frame):
+    def generate_person(self,base_frame,Enemy):
 
+        if(DRAGON_PLACE_X-2 > self.positionx):
+
+            if(base_frame.current_frame < self.positionx):
+                base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
+
+            else:
+                self.positionx = base_frame.current_frame
+                base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = self.person
+
+        else:
+            self.positionx = DRAGON_PLACE_X-3
             if(base_frame.current_frame < self.positionx):
                 base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
 
@@ -234,6 +248,9 @@ class Iceballs:
     def get_x(self):
         return self.__x
 
+    def get_status(self):
+        return self.status
+
     def on_frame(self,Frame):
         Frame.user_frame[self.__y][self.__x] = self.__iceballs
 
@@ -243,6 +260,7 @@ class Iceballs:
     def check_collision(self,Frame,Person):
         if(iceball_collision(self.__y,self.__x,Frame,Person) == 2):
             Person.decrease_life()
+            self.status = False
 
 
 class Enemy(Person):
@@ -251,16 +269,25 @@ class Enemy(Person):
         self.dragon = [[' ', ' ', ' ', ';', '.', '_', "'", '.', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '.', '-', "'",' ',' ',' ',' ',' ',' '],[' ', ' ', ' ', '(', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '\\', '-', '.', '/', ' ', ';', '.', '-', ';',' ',' ',' ',' '],[' ', ' ', ' ', ' ', ';', ' ', '_', ' ', ' ', ' ', ' ', ' ', ' ', '|', "'", '-', '-', ',', '|', ' ', '`', ' ', ' ', "'", '<', ' ', '_', '_', '_', ','],[' ', ' ', ' ', ' ', ' ', ' ', '_', '_', ')', ' ', ' ', ' ', ' ', ' ', '\\', '`', '-', '.', '_', '_', '.', ' ', ' ', ' ', '/', '`', '.', '-', "'", '/'],[' ', ' ', ' ', ' ', '{', ';', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '`', '/', 'o', '(', 'o', ' ', '\\', ' ', '|', ' ', '/', ' ', ',', "'",' '],[' ', ' ', ' ', ' ', ' ', ' ', ';', ' ', ' ', '_', ' ', ' ', '_', '_', '.', '-', "'", '-', "'", '`', '-', "'", ' ', ' ', "'", '`',' ',' ',' ',' '],[' ', ' ', ' ', ' ', ' ', ' ', "'", ' ', '(', '-', ',', '`', ' ', ' ', '.', '-', '.', ' ', ' ', ' ', ' ', ' ', '_', ' ', '-', '.',' ',' ',' ',' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '/', ' ', ' ', ' ', ' ', ' ', '_', ')', ')', ' ', ' ', '_', '/', ' ', ' ', ' ', ' ', '|',' ',' ',' ']]
         self.positionx = DRAGON_PLACE_X
         self.positiony = TOTAL_WIDTH-9
+        self.__life = 20
+
+    def decrease_life(self):
+        self.__life -= 1
+
+    def show_life(self):
+        return self.__life
 
     def place_dragon(self,Frame,Person):
-        if(Person.positiony < 22):
-            self.positiony = Person.positiony
-            Frame.user_frame[Person.positiony:Person.positiony+8,DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.dragon
+        locs = 0
+        locs = Person.positiony+random.randint(-3,3)
+        if(locs < 22):
+            self.positiony = locs
+            Frame.user_frame[locs:locs+8,DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.dragon
 
         else:
             self.positiony = TOTAL_WIDTH-9
             Frame.user_frame[TOTAL_WIDTH-9:TOTAL_WIDTH-1,DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.dragon
 
     def fire_ice(self,Frame):
-        Frame.ice_balls.append(Iceballs(self.positionx+1,self.positiony+4))
+        Frame.ice_balls.append(Iceballs(self.positionx+1,self.positiony+5))
 

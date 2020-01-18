@@ -12,6 +12,7 @@ class base_frame:
         self.bullets = []
         self.obstacles_placed = []
         self.ice_balls = []
+        self.__time_remaining = 570
 
     def generate_boundary(self):
         for i in range(TOTAL_GAME_FRAME):
@@ -20,6 +21,11 @@ class base_frame:
         for i in range(TOTAL_GAME_FRAME):
             self.frame[TOTAL_WIDTH-1][i] = 'X'
 
+    def decrease_time(self):
+        self.__time_remaining -= 1
+
+    def get_time(self):
+        return self.__time_remaining
 
     def getFrame(self):
         return self.current_frame
