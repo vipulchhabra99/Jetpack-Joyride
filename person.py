@@ -6,41 +6,7 @@ from rewards import *
 from alarmexception import AlarmException
 from constraint_checker import *
 from config import *
-
-class Bullet:
-    
-    def __init__(self,x,y):
-        self.__x = x
-        self.__y = y
-        self.bullet = '*'
-        self.velocityx = 2
-        self.status = True
-
-    def on_frame(self,x,Frame):
-        Frame.user_frame[self.__y][x] = self.bullet
-
-    def forward(self):
-        self.__x += self.velocityx
-
-    def get_x(self):
-        return self.__x
-
-    def get_y(self):
-        return self.__y
-    
-    def bullet_remove(self,Frame):
-        Frame.user_frame[self.__y][self.__x] = ' '
-        self.status = False
-
-    def detect_collision(self,Frame,Enemy):
-        if(bullet_collision(self.__y,self.__x,Frame,Enemy) == 2):
-            self.bullet_remove(Frame)
-
-        else:
-            if(dragon_bullet(self.__x,self.__y,Enemy) == 3):
-                self.bullet_remove(Frame)
-                Enemy.decrease_life()
-        
+from firing import *
 
 class Person:
 
@@ -112,21 +78,21 @@ class Person:
 
         if(DRAGON_PLACE_X-2 > self.positionx):
 
-            if(base_frame.current_frame < self.positionx):
+            if(base_frame.get_frame() < self.positionx):
                 base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
 
             else:
-                self.positionx = base_frame.current_frame
-                base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = self.person
+                self.positionx = base_frame.get_frame()
+                base_frame.user_frame[self.positiony:self.positiony+3,base_frame.get_frame():base_frame.get_frame()+3] = self.person
 
         else:
             self.positionx = DRAGON_PLACE_X-3
-            if(base_frame.current_frame < self.positionx):
+            if(base_frame.get_frame() < self.positionx):
                 base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = self.person
 
             else:
-                self.positionx = base_frame.current_frame
-                base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = self.person
+                self.positionx = base_frame.get_frame()
+                base_frame.user_frame[self.positiony:self.positiony+3,base_frame.get_frame():base_frame.get_frame()+3] = self.person
 
     def show_life(self):
         return self.__power
@@ -135,13 +101,13 @@ class Person:
         self.__power -= 1
 
     def reset_person(self,base_frame):
-        if(base_frame.current_frame <= self.positionx):
+        if(base_frame.get_frame() <= self.positionx):
             #print(base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3])
             base_frame.user_frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3] = " "
 
         else:
             #print(base_frame.frame[self.positiony:self.positiony+3,self.positionx:self.positionx+3])
-            base_frame.user_frame[self.positiony:self.positiony+3,base_frame.current_frame:base_frame.current_frame+3] = " "        
+            base_frame.user_frame[self.positiony:self.positiony+3,base_frame.get_frame():base_frame.get_frame()+3] = " "        
 
     def gravity(self,Frame):
         if(self.positiony < 27):
@@ -179,7 +145,7 @@ class Person:
             quit()
 
         elif char == 'd':
-            if(self.positionx - Frame.current_frame < 97):
+            if(self.positionx - Frame.get_frame() < 97):
                 if(check_obstacle(self.positiony,self.positionx+1,Frame) and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
@@ -214,7 +180,7 @@ class Person:
                 self.positiony += 1
 
         elif char == 'a':
-            if(self.positionx - Frame.current_frame > 0):
+            if(self.positionx - Frame.get_frame() > 0):
                 if(check_obstacle(self.positiony,self.positionx-1,Frame) and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
@@ -235,32 +201,6 @@ class Person:
 
         else:
             self.__jetflag = 0
-
-class Iceballs:
-
-    def __init__(self,x,y):
-        self.__x = x
-        self.__y = y
-        self.__iceballs= '#'
-        self.status = True
-        self.velocity = ICE_BALL_VELOCITY
-
-    def get_x(self):
-        return self.__x
-
-    def get_status(self):
-        return self.status
-
-    def on_frame(self,Frame):
-        Frame.user_frame[self.__y][self.__x] = self.__iceballs
-
-    def forward(self):
-        self.__x -= ICE_BALL_VELOCITY
-
-    def check_collision(self,Frame,Person):
-        if(iceball_collision(self.__y,self.__x,Frame,Person) == 2):
-            Person.decrease_life()
-            self.status = False
 
 
 class Enemy(Person):
