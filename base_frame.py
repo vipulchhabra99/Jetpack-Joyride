@@ -22,7 +22,13 @@ class base_frame:
             self.frame[TOTAL_WIDTH-1][i] = 'X'
 
     def add_bullet(self,Bullet):
-        self.__bullets.append(Bullet)
+        self.bullets.append(Bullet)
+
+    def add_obstacles(self,Obstacles):
+        self.obstacles_placed.append(Obstacles)
+
+    def add_ice_balls(self,ice_ball):
+        self.ice_balls.append(ice_ball)
 
     def get_frame(self):
         return self.__current_frame

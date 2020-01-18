@@ -22,7 +22,7 @@ def bullet_printer(base_frame, Enemy):
     # By the runner that are either unused or are
     # not on current running frame
     for bullet in base_frame.bullets:
-        if(base_frame.get_frame() <= bullet.get_x() < base_frame.get_frame()+100 and bullet.status == True):
+        if(base_frame.get_frame() <= bullet.get_x() < base_frame.get_frame()+100 and bullet.get_status() == True):
             bullet.forward()
             bullet.detect_collision(base_frame, Enemy)
             bullet.on_frame(bullet.get_x(), base_frame)
@@ -183,7 +183,7 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     else:
         boost_check = 0
         Runner.change_boostflag()
-        if(iteration % 5 == 0 and Frame.get_frame() < STATIC_FRAME):
+        if(iteration % 2 == 0 and Frame.get_frame() < STATIC_FRAME):
             Frame.increase_frame()
             Frame.decrease_time()
     

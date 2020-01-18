@@ -7,8 +7,8 @@ class Bullet:
         self.__x = x
         self.__y = y
         self.__bullet = '*'
-        self.__velocityx = 2
-        self.status = True
+        self.__velocityx = BULLET_VELOCITY
+        self.__status = True
 
     def on_frame(self,x,Frame):
         Frame.user_frame[self.__y][x] = self.__bullet
@@ -16,15 +16,24 @@ class Bullet:
     def forward(self):
         self.__x += self.__velocityx
 
+    def change_status(self):
+        self.__status = False
+
     def get_x(self):
         return self.__x
 
     def get_y(self):
         return self.__y
+
+    def set_x(self,value):
+        self.__x = value
+
+    def get_status(self):
+        return self.__status
     
     def bullet_remove(self,Frame):
         Frame.user_frame[self.__y][self.__x] = ' '
-        self.status = False
+        self.__status = False
 
     def detect_collision(self,Frame,Enemy):
         if(bullet_collision(self.__y,self.__x,Frame,Enemy) == 2):
@@ -36,29 +45,21 @@ class Bullet:
                 Enemy.decrease_life()
         
 
-class Iceballs:
+class Iceballs(Bullet):
     
     def __init__(self,x,y):
-        self.__x = x
-        self.__y = y
+        Bullet.__init__(self,x,y)
         self.__iceballs= '#'
-        self.__status = True
         self.__velocity = ICE_BALL_VELOCITY
 
-    def get_x(self):
-        return self.__x
-
-    def get_status(self):
-        return self.__status
-
     def on_frame(self,Frame):
-        Frame.user_frame[self.__y][self.__x] = self.__iceballs
+        Frame.user_frame[self.get_y()][self.get_x()] = self.__iceballs
 
     def forward(self):
-        self.__x -= self.__velocity
+        self.set_x(self.get_x()-self.__velocity)
 
     def check_collision(self,Frame,Person):
-        if(iceball_collision(self.__y,self.__x,Frame,Person) == 2):
+        if(iceball_collision(self.get_y(),self.get_x(),Frame,Person) == 2):
             Person.decrease_life()
-            self.status = False
+            self.change_status()
 

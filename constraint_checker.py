@@ -67,7 +67,7 @@ def check_obstacle(posx, posy, Frame):
 def bullet_collision(posx, posy, Frame, Enemy):
     for obs in Frame.obstacles_placed:
         if(obs[3].check_status() is True and ([posx, posy] in obs[0:3] or [posx, posy-1] in obs[0:3] or [posx, posy+1] in obs[0:3])):
-            obs[3].change_status(obs[3].get_x(), obs[3].get_y(), Frame)
+            obs[3].remove_obstacle(obs[3].get_x(), obs[3].get_y(), Frame)
             return 2
 
 
