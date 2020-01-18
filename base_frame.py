@@ -11,6 +11,7 @@ class base_frame:
         self.user_frame = np.array([[' ']*TOTAL_GAME_FRAME]*TOTAL_WIDTH)
         self.bullets = []
         self.obstacles_placed = []
+        self.ice_balls = []
 
     def generate_boundary(self):
         for i in range(TOTAL_GAME_FRAME):

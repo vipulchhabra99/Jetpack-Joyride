@@ -12,7 +12,7 @@ class background:
         
         i = random.randint(20,30)
 
-        while(i < TOTAL_GAME_FRAME - 50):
+        while(i < TOTAL_GAME_FRAME - 70):
             j = random.randint(30,50)
             i += j
             y = random.randint(1,3)

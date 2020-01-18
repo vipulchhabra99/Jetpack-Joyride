@@ -68,6 +68,13 @@ def bullet_collision(posx,posy,Frame):
             obs[3].change_status(obs[3].get_x(),obs[3].get_y(),Frame)
             return 2
 
+def iceball_collision(posx,posy,Frame,Person):
+
+    for i in range(3):
+        for j in range(3):
+            if((Person.positiony+i) == posx and (Person.positionx+j) == posy):
+                return 2
+
 def speedboost_check(posx,posy,Frame):
 
     for i in range(3):

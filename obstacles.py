@@ -1,6 +1,7 @@
 from base_frame import base_frame
 import numpy as np
 import random
+from config import *
 
 class Obstacles:
 
@@ -85,7 +86,7 @@ def obstacle_place(Frame):
     ob3 = new_obstacle()'''
     empty_array = np.array([[' ',' ',' ',' '],[' ',' ',' ',' '],[' ',' ',' ',' '],[' ',' ',' ',' ']])
 
-    while(i < 3900):
+    while(i < TOTAL_GAME_FRAME-200):
         j = random.randint(10,30)
         i += j
         y = random.randint(7,25)

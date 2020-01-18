@@ -13,14 +13,14 @@ class Bullet:
         self.__x = x
         self.__y = y
         self.bullet = '*'
-        self.veocityx = 2
+        self.velocityx = 2
         self.status = True
 
     def on_frame(self,x,Frame):
         Frame.user_frame[self.__y][x] = self.bullet
 
     def forward(self):
-        self.__x += self.veocityx
+        self.__x += self.velocityx
 
     def get_x(self):
         return self.__x
@@ -116,6 +116,9 @@ class Person:
 
     def show_life(self):
         return self.__power
+
+    def decrease_life(self):
+        self.__power -= 1
 
     def reset_person(self,base_frame):
         if(base_frame.current_frame <= self.positionx):
@@ -219,14 +222,45 @@ class Person:
         else:
             self.__jetflag = 0
 
+class Iceballs:
+
+    def __init__(self,x,y):
+        self.__x = x
+        self.__y = y
+        self.__iceballs= '#'
+        self.status = True
+        self.velocity = ICE_BALL_VELOCITY
+
+    def get_x(self):
+        return self.__x
+
+    def on_frame(self,Frame):
+        Frame.user_frame[self.__y][self.__x] = self.__iceballs
+
+    def forward(self):
+        self.__x -= ICE_BALL_VELOCITY
+
+    def check_collision(self,Frame,Person):
+        if(iceball_collision(self.__y,self.__x,Frame,Person) == 2):
+            Person.decrease_life()
+
+
 class Enemy(Person):
 
     def __init__(self):
         self.dragon = [[' ', ' ', ' ', ';', '.', '_', "'", '.', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '.', '-', "'",' ',' ',' ',' ',' ',' '],[' ', ' ', ' ', '(', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '\\', '-', '.', '/', ' ', ';', '.', '-', ';',' ',' ',' ',' '],[' ', ' ', ' ', ' ', ';', ' ', '_', ' ', ' ', ' ', ' ', ' ', ' ', '|', "'", '-', '-', ',', '|', ' ', '`', ' ', ' ', "'", '<', ' ', '_', '_', '_', ','],[' ', ' ', ' ', ' ', ' ', ' ', '_', '_', ')', ' ', ' ', ' ', ' ', ' ', '\\', '`', '-', '.', '_', '_', '.', ' ', ' ', ' ', '/', '`', '.', '-', "'", '/'],[' ', ' ', ' ', ' ', '{', ';', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '`', '/', 'o', '(', 'o', ' ', '\\', ' ', '|', ' ', '/', ' ', ',', "'",' '],[' ', ' ', ' ', ' ', ' ', ' ', ';', ' ', ' ', '_', ' ', ' ', '_', '_', '.', '-', "'", '-', "'", '`', '-', "'", ' ', ' ', "'", '`',' ',' ',' ',' '],[' ', ' ', ' ', ' ', ' ', ' ', "'", ' ', '(', '-', ',', '`', ' ', ' ', '.', '-', '.', ' ', ' ', ' ', ' ', ' ', '_', ' ', '-', '.',' ',' ',' ',' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '/', ' ', ' ', ' ', ' ', ' ', '_', ')', ')', ' ', ' ', '_', '/', ' ', ' ', ' ', ' ', '|',' ',' ',' ']]
+        self.positionx = DRAGON_PLACE_X
+        self.positiony = TOTAL_WIDTH-9
 
     def place_dragon(self,Frame,Person):
         if(Person.positiony < 22):
+            self.positiony = Person.positiony
             Frame.user_frame[Person.positiony:Person.positiony+8,DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.dragon
 
         else:
+            self.positiony = TOTAL_WIDTH-9
             Frame.user_frame[TOTAL_WIDTH-9:TOTAL_WIDTH-1,DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.dragon
+
+    def fire_ice(self,Frame):
+        Frame.ice_balls.append(Iceballs(self.positionx+1,self.positiony+4))
+

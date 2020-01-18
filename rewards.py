@@ -2,6 +2,8 @@ from base_frame import base_frame
 import random
 import numpy as np
 from config import *
+from colorama import Fore, Back, Style 
+
 
 class speed_boost:
     
@@ -61,7 +63,7 @@ class Rewards:
         i = 10
         j = 0
 
-        while(i < TOTAL_GAME_FRAME-100):
+        while(i < TOTAL_GAME_FRAME-220):
             
             choice = random.randint(1, 3)
             j = random.randint(10,30)

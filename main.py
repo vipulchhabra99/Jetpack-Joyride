@@ -10,6 +10,9 @@ import sys
 from constraint_checker import *
 from obstacles import *
 from config import *
+import time
+from colorama import Fore, Back, Style 
+
 np.set_printoptions(threshold=sys.maxsize)
 
 def bullet_printer(base_frame):
@@ -22,8 +25,13 @@ def bullet_printer(base_frame):
 
 def magnet_printer(magnet,frame):
     magnet.magnet_on_frame(frame)
-        
 
+def ice_ball_printer(Frame,Runner):
+    for ice_ball in Frame.ice_balls:
+        if(ice_ball.get_x() > STATIC_FRAME-FRAME_PER_SCENE):
+            ice_ball.forward()
+            ice_ball.check_collision(Frame,Runner)
+            ice_ball.on_frame(Frame)
 
 Frame = base_frame()
 boundary = Frame.generate_boundary()
@@ -83,13 +91,41 @@ while(Frame.getGameRun()):
     if(magnet_period > 300):
         Runner.reset_magnet()
 
-    if(Frame.current_frame > 50):
+    if(Frame.current_frame+FRAME_PER_SCENE > DRAGON_PLACE_X):
         enemy.place_dragon(Frame,Runner)
+        
+        if(iteration % 15 == 0):
+            enemy.fire_ice(Frame)
+            
+        ice_ball_printer(Frame,Runner)
+
 
 
     for i in range(TOTAL_WIDTH):
         for j in range(FRAME_PER_SCENE):
-            print(Frame.user_frame[i][Frame.current_frame+j],end = "")
+            if(i == 0 or i == TOTAL_WIDTH-1):
+                print("\u001b[31;1m"+Frame.user_frame[i][Frame.current_frame+j],end = "")
+            else:
+                if((i == Runner.positiony and j == Runner.positionx+1-Frame.current_frame ) or (i == Runner.positiony+1 and j == Runner.positionx+1-Frame.current_frame )):
+                    print('\u001b[37m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+                elif(Frame.user_frame[i][Frame.current_frame+j] == '@'):
+                    print('\u001b[38;5;50m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+
+                elif(Frame.user_frame[i][Frame.current_frame+j] == '$'):
+                    print('\u001b[33;1m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+
+                elif(Frame.user_frame[i][Frame.current_frame+j] == '|' or Frame.user_frame[i][Frame.current_frame+j] == '='):
+                    print('\u001b[38;5;202m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+                
+                elif(Frame.user_frame[i][Frame.current_frame+j] == 'S'):
+                    print('\u001b[32;1m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+
+                elif(Frame.current_frame+j >= DRAGON_PLACE_X):
+                    print('\u001b[32;1m'+Frame.user_frame[i][Frame.current_frame+j],end = "")
+
+                else:
+                    print(Fore.WHITE+Frame.user_frame[i][Frame.current_frame+j],end = "")
+
         print()
 
     print()
@@ -110,15 +146,8 @@ while(Frame.getGameRun()):
 
         
 
-    #Frame.place_obstacles()
-    #score = check_constraint(Runner.positiony,Runner.positionx)
-    #print(score)
-    #Runner.check_score(score)
     Runner.move_person(Frame)
-    #os.system('clear')
     iteration += 1
-
-    #print(Runner.check_boost())
 
     if(Runner.check_boost() == True and boost_check < 200):
         if(iteration % 2 == 0 and Frame.current_frame < STATIC_FRAME):
