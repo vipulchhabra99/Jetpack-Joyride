@@ -18,10 +18,27 @@ class Person:
         self.__bulletflag = 0
         self.__magnetflag = False
         self.__boost = False
+        self.__boostdur = 0
         self.__positiony = 27
         self.__positionx = 0
         self.__magnetposx = 0
         self.__shield_activate = False
+        self.__magnetperiod = 0
+
+    def get_magnetperiod(self):
+        return self.__magnetperiod
+
+    def decrease_magnetperiod(self):
+        self.__magnetperiod -= 1
+
+    def get_boostdur(self):
+        return self.__boostdur
+
+    def set_boostdur(self, value):
+        self.__boostdur = value
+
+    def decrease_boost(self):
+        self.__boostdur -= 1
 
     def get_person(self):
         return self.__person
@@ -74,6 +91,7 @@ class Person:
 
     def set_magnet(self):
         self.__magnetflag = True
+        self.__magnetperiod += 300
 
     def reset_magnet(self):
         self.__magnetflag = False
@@ -155,6 +173,7 @@ class Person:
             self.__score += value
             if(self.speedboost_check(self.__positiony+1,self.__positionx,Frame)):
                 self.__boost = True
+                self.__boostdur += 200
             self.reset_person(Frame)
             self.__positiony += 1
 
@@ -195,6 +214,7 @@ class Person:
                 self.__score += value
                 if(self.speedboost_check(self.__positiony,self.__positionx+1,Frame)):
                     self.__boost = True
+                    self.__boostdur += 200
                 self.reset_person(Frame)
                 self.__jetflag = 0
                 self.__positionx += 1
@@ -211,7 +231,8 @@ class Person:
 
                 self.__score += value
                 if(self.speedboost_check(self.__positiony-1,self.__positionx,Frame)):
-                    self.__boost = True                                
+                    self.__boost = True 
+                    self.__boostdur += 200                               
                 self.reset_person(Frame)
                 self.__positiony -=1
                 self.__jetflag = 1
@@ -229,6 +250,7 @@ class Person:
                 self.__score += value
                 if(self.speedboost_check(self.__positiony+1,self.__positionx,Frame)):
                     self.__boost = True 
+                    self.__boostdur += 200
                 self.reset_person(Frame)
                 self.__positiony += 1
 
@@ -244,7 +266,8 @@ class Person:
 
                 self.__score += value             
                 if(self.speedboost_check(self.__positiony,self.__positionx-1,Frame)):
-                    self.__boost = True                
+                    self.__boost = True
+                    self.__boostdur += 200                
                 self.reset_person(Frame)
                 self.__jetflag = 0
                 self.__positionx -= 1

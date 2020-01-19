@@ -54,8 +54,6 @@ magnet = Magnet(random.randint(MAGNET_LOCATION_MIN,
                                MAGNET_LOCATION_MAX), MAGNET_LOC_Y)
 mag_loc = magnet.get_x()
 Runner.set_magnetx(magnet.get_x())
-magnet_period = 0  # This will used to define the period for which magnet has to be displayed
-boost_check = 0
 enemy = Enemy()
 
 # The game will run untill either time_remaining gets zero
@@ -84,12 +82,12 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     bullet_printer(Frame, enemy)
 
     # Used for the magnet as an obstacle which will only be available for small period
-    if(Frame.get_frame() <= mag_loc < Frame.get_frame()+80 and magnet_period < 300):
+    if(Frame.get_frame() <= mag_loc < Frame.get_frame()+80):
         magnet_printer(magnet, Frame)
         Runner.set_magnet()
-        magnet_period += 1
+        Runner.decrease_magnetperiod()
 
-        if(Runner.check_boost() == True and boost_check < 200):
+        if(Runner.check_boost() == True and Runner.get_boostdur() > 0):
             if(iteration % 2 == 0):
                 magnet.forward()
                 Runner.set_magnetx(magnet.get_x())
@@ -102,7 +100,7 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
                 Runner.set_x(magnet.get_x())
 
     # When the magnet cross the period it would be reset
-    if(magnet_period > 300):
+    if(Runner.get_magnetperiod() == 0):
         Runner.reset_magnet()
 
     # When the dragon comes has to placed in frame in the end
@@ -173,13 +171,12 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     Runner.move_person(Frame)
     iteration += 1
 
-    if(Runner.check_boost() == True and boost_check < 200):
+    if(Runner.check_boost() == True and Runner.get_boostdur() > 0):
         if(iteration % 2 == 0 and Frame.get_frame() < STATIC_FRAME):
             Frame.increase_frame()
             Frame.decrease_time()
-        boost_check += 1
+        Runner.decrease_boost()
     else:
-        boost_check = 0
         Runner.change_boostflag()
         if(iteration % 5 == 0 and Frame.get_frame() < STATIC_FRAME):
             Frame.increase_frame()
