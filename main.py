@@ -10,7 +10,6 @@ import sys
 from obstacles import *
 from config import *
 import time
-from colorama import Fore, Back, Style
 from firing import *
 
 np.set_printoptions(threshold=sys.maxsize)
@@ -181,7 +180,7 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
         if(iteration % 5 == 0 and Frame.get_frame() < STATIC_FRAME):
             Frame.increase_frame()
             Frame.decrease_time()
-    
+
     if(Frame.get_frame() >= STATIC_FRAME):
         if(iteration % 5 == 0):
             Frame.decrease_time()

@@ -1,7 +1,8 @@
-from input import _getChUnix as getChar
-from base_frame import base_frame
+'''Person module containg methods and varaibles for runner and enemies'''
 import signal
 import numpy as np
+from input import _getChUnix as getChar
+from base_frame import base_frame
 from rewards import *
 from alarmexception import AlarmException
 from config import *
@@ -9,6 +10,7 @@ from firing import *
 
 
 class Person:
+    """Person class used for Mandalorain on screen"""
 
     def __init__(self):
         self.__person = np.array(
@@ -28,92 +30,157 @@ class Person:
         self.__magnetperiod = 0
 
     def get_magnetperiod(self):
+        """Used to get remaining period of magnet."""
         return self.__magnetperiod
 
     def decrease_magnetperiod(self):
+        """Used to decrease remaining period of the magnet."""
         self.__magnetperiod -= 1
 
     def get_boostdur(self):
+        """Used to get duration of the boost."""
         return self.__boostdur
 
     def set_boostdur(self, value):
+        """
+
+        Args:
+          value: To set value of the boost duration.
+
+        """
         self.__boostdur = value
 
     def decrease_boost(self):
+        """Used to decrease value of the boost duration."""
         self.__boostdur -= 1
 
     def get_person(self):
+        """Used to get structure of mandalorain. """
         return self.__person
 
     def get_magnetx(self):
+        """Used to get position of magnet. """
         return self.__magnetposx
 
     def set_magnetx(self, value):
+        """
+
+        Args:
+          value: value of x coordinate of magnet.
+
+        """
         self.__magnetposx = value
 
     def get_x(self):
+        """Used to get x coordinate of mandalorian."""
         return self.__positionx
 
     def set_x(self, value):
+        """
+
+        Args:
+          value: Used to set value of x coordinate of Mandalorian.
+
+        """
         self.__positionx = value
 
     def get_y(self):
+        """ Used to get y coordinate of the Mandalorain. """
         return self.__positiony
 
     def set_y(self, value):
+        """
+
+        Args:
+          value: Value to set to y coordinate.
+
+        """
         self.__positiony = value
 
     def deactivate_shield(self):
+        """ Used to deactivate shield of the Mandalorain."""
         self.__shield_activate = False
 
     def check_shield(self):
+        """Used to check shield remaining of the Mandalorain."""
         return self.__shield_activate
 
     def show_shield(self):
+        """Used to get shield status of Mandalorain."""
         return self.__shield
 
     def decrease_shield(self):
+        """Used to decrease shield of Mandalorain."""
         self.__shield -= 1
 
     def increase_shield(self):
+        """Used to increase shield of Mandalorain."""
         self.__shield += 1
 
     def check_boost(self):
+        """Used to check if boost flag is true of Mandalorain."""
         return self.__boost
 
     def change_boostflag(self):
+        """Used to change boost flag of Mandalorain. """
         self.__boost = False
 
     def show_score(self):
+        """Used to show score of the Mandalorain."""
         scr = self.__score
         return scr
 
     def check_score(self, score):
+        """
+
+        Args:
+          score: Value to be added to score variable.
+
+        Returns:
+            None
+
+        """
         self.__score += score
 
     def set_magnet(self):
+        """Used to set magnet flag and its duration on screen."""
         self.__magnetflag = True
         self.__magnetperiod += 300
 
     def reset_magnet(self):
+        """Used to remove magnet from frame."""
         self.__magnetflag = False
 
     def check_magnet_flag(self):
+        """Used to get value of magnet flag. """
         return self.__magnetflag
 
     def show_flag(self):
+        """Used to get value of the jet flag."""
         return self.__jetflag
 
     def check_constraint(self, posx, posy, base_frame):
+        """
+
+        Args:
+          posx: position x of the Mandalorain.
+          posy: position y of the Mandalorain.
+          base_frame: frame object.
+
+        Returns:
+            int : Score obtained for the particualr position of the person.
+
+        """
         score = 0
 
         for i in range(3):
             for j in range(3):
 
-                if(base_frame.frame[posx+i][posy+j] == '=' or base_frame.frame[posx+i][posy+j] == '|'):
+                if(base_frame.frame[posx+i][posy+j] == '=' or
+                   base_frame.frame[posx+i][posy+j] == '|'):
                     return 'obstacle'
 
-                elif(base_frame.frame[posx+i][posy+j] == '$'):
+                elif base_frame.frame[posx+i][posy+j] == '$':
                     score += 1
                     base_frame.frame[posx+i][posy+j] = ' '
                     base_frame.user_frame[posx+i][posy+j] = ' '
@@ -121,55 +188,106 @@ class Person:
         return score
 
     def generate_person(self, base_frame, Enemy):
+        """
 
-        if(DRAGON_PLACE_X-2 > self.__positionx):
+        Args:
+          base_frame: Frame object on which Mandalorian has to be generated.
+          Enemy: Enemy object to constraint location of Mandalorian.
 
-            if(base_frame.get_frame() < self.__positionx):
-                base_frame.user_frame[self.__positiony:self.__positiony +
-                                      3, self.__positionx:self.__positionx+3] = self.__person
+        Returns:
+            None
+
+        """
+
+        if DRAGON_PLACE_X-2 > self.__positionx:
+
+            if base_frame.get_frame() < self.__positionx:
+                x_cor = self.__positionx
+                y_cor = self.__positiony
+                person = self.__person
+                base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = person
 
             else:
                 self.__positionx = base_frame.get_frame()
-                base_frame.user_frame[self.__positiony:self.__positiony+3,
-                                      base_frame.get_frame():base_frame.get_frame()+3] = self.__person
+                x_cor = base_frame.get_frame()
+                y_cor = self.__positiony
+                person = self.__person
+                base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = person
 
         else:
             self.__positionx = DRAGON_PLACE_X-3
-            if(base_frame.get_frame() < self.__positionx):
-                base_frame.user_frame[self.__positiony:self.__positiony +
-                                      3, self.__positionx:self.__positionx+3] = self.__person
+            if base_frame.get_frame() < self.__positionx:
+                x_cor = self.__positionx
+                y_cor = self.__positiony
+                person = self.__person
+                base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = person
 
             else:
                 self.__positionx = base_frame.get_frame()
-                base_frame.user_frame[self.__positiony:self.__positiony+3,
-                                      base_frame.get_frame():base_frame.get_frame()+3] = self.__person
+                y_cor = self.__positiony
+                x_cor = base_frame.get_frame()
+                person = self.__person
+                base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = person
 
     def show_life(self):
+        """Used to get value of life of Mandalorian."""
         return self.__life
 
     def decrease_life(self):
+        """Used to decrease value of life of Mandalorian. """
         self.__life -= 1
 
     def speedboost_check(self, posx, posy, Frame):
+        """
+
+        Args:
+          posx: X coordinate of the Mandalorian.
+          posy: Y coordinate of the Mandalorian.
+          Frame: Frame object to check speed boost.
+
+        Returns:
+            Bool : True if Speed boost exist on given portion.
+
+        """
 
         for i in range(3):
             for j in range(3):
-                if(Frame.frame[posx+i][posy+j] == 'S'):
+                if Frame.frame[posx+i][posy+j] == 'S':
                     Frame.frame[posx+i][posy+j] = ' '
                     Frame.user_frame[posx+i][posy+j] = ' '
                     return True
 
     def reset_person(self, base_frame):
-        if(base_frame.get_frame() <= self.__positionx):
-            base_frame.user_frame[self.__positiony:self.__positiony +
-                                  3, self.__positionx:self.__positionx+3] = " "
+        """
+
+        Args:
+          base_frame: frame object from which madalorain has to be removed.
+
+        Returns:
+            None
+
+        """
+        if base_frame.get_frame() <= self.__positionx:
+            x_cor = self.__positionx
+            y_cor = self.__positiony
+            base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = " "
 
         else:
-            base_frame.user_frame[self.__positiony:self.__positiony+3,
-                                  base_frame.get_frame():base_frame.get_frame()+3] = " "
+            y_cor = self.__positiony
+            x_cor = base_frame.get_frame()
+            base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = " "
 
     def gravity(self, Frame):
-        if(self.__positiony < 27):
+        """
+
+        Args:
+          Frame: Frame object from which mandalorain has to be removed.
+
+        Returns:
+            None
+
+        """
+        if self.__positiony < 27:
             value = self.check_constraint(
                 self.__positiony+1, self.__positionx, Frame)
             if(value is 'obstacle' and self.__shield_activate is False):
@@ -180,18 +298,45 @@ class Person:
                 value = 0
 
             self.__score += value
-            if(self.speedboost_check(self.__positiony+1, self.__positionx, Frame)):
+            if self.speedboost_check(self.__positiony+1,
+                                     self.__positionx, Frame):
                 self.__boost = True
                 self.__boostdur += 200
             self.reset_person(Frame)
             self.__positiony += 1
 
     def move_person(self, Frame):
+        """
+
+        Args:
+          Frame: Frame object from which mandalorian has to be removed.
+
+        Returns:
+            None
+
+        """
         def alarmhandler(signum, frame):
+            """
+
+            Args:
+              signum: Signal Number.
+              frame: Frame Object.
+
+            Returns:
+                None
+
+            """
             raise AlarmException
 
         def user_input(timeout=0.1):
-            """input method."""
+            """input method.
+
+            Args:
+              timeout:  (Default value = 0.1)
+
+            Returns:
+
+            """
             signal.signal(signal.SIGALRM, alarmhandler)
             signal.setitimer(signal.ITIMER_REAL, timeout)
             try:
@@ -210,7 +355,7 @@ class Person:
             quit()
 
         elif char == 'd':
-            if(self.__positionx - Frame.get_frame() < 97):
+            if self.__positionx - Frame.get_frame() < 97:
                 value = self.check_constraint(
                     self.__positiony, self.__positionx+1, Frame)
                 if(value is 'obstacle' and self.__shield_activate is False):
@@ -221,7 +366,8 @@ class Person:
                     value = 0
 
                 self.__score += value
-                if(self.speedboost_check(self.__positiony, self.__positionx+1, Frame)):
+                if self.speedboost_check(self.__positiony,
+                                         self.__positionx+1, Frame):
                     self.__boost = True
                     self.__boostdur += 200
                 self.reset_person(Frame)
@@ -229,7 +375,7 @@ class Person:
                 self.__positionx += 1
 
         elif char == 'w':
-            if(self.__positiony > 1):
+            if self.__positiony > 1:
                 value = self.check_constraint(
                     self.__positiony-1, self.__positionx, Frame)
                 if(value is 'obstacle' and self.__shield_activate is False):
@@ -240,7 +386,8 @@ class Person:
                     value = 0
 
                 self.__score += value
-                if(self.speedboost_check(self.__positiony-1, self.__positionx, Frame)):
+                if self.speedboost_check(self.__positiony-1,
+                                         self.__positionx, Frame):
                     self.__boost = True
                     self.__boostdur += 200
                 self.reset_person(Frame)
@@ -248,7 +395,7 @@ class Person:
                 self.__jetflag = 1
 
         elif char == 's':
-            if(self.__positiony < 27):
+            if self.__positiony < 27:
                 value = self.check_constraint(
                     self.__positiony+1, self.__positionx, Frame)
                 if(value is 'obstacle' and self.__shield_activate is False):
@@ -259,14 +406,15 @@ class Person:
                     value = 0
 
                 self.__score += value
-                if(self.speedboost_check(self.__positiony+1, self.__positionx, Frame)):
+                if self.speedboost_check(self.__positiony+1,
+                                         self.__positionx, Frame):
                     self.__boost = True
                     self.__boostdur += 200
                 self.reset_person(Frame)
                 self.__positiony += 1
 
         elif char == 'a':
-            if(self.__positionx - Frame.get_frame() > 0):
+            if self.__positionx - Frame.get_frame() > 0:
                 value = self.check_constraint(
                     self.__positiony, self.__positionx-1, Frame)
                 if(value is 'obstacle' and self.__shield_activate is False):
@@ -277,7 +425,8 @@ class Person:
                     value = 0
 
                 self.__score += value
-                if(self.speedboost_check(self.__positiony, self.__positionx-1, Frame)):
+                if(self.speedboost_check(self.__positiony,
+                                         self.__positionx-1, Frame)):
                     self.__boost = True
                     self.__boostdur += 200
                 self.reset_person(Frame)
@@ -290,7 +439,7 @@ class Person:
 
         elif char.isspace():
             self.__jetflag = 0
-            if(self.__shield == 20):
+            if self.__shield == 20:
                 self.__shield_activate = True
 
         else:
@@ -298,6 +447,7 @@ class Person:
 
 
 class Enemy(Person):
+    """Enemy class to represet Dragon."""
 
     def __init__(self):
         self.__drgaon = [[' ', ' ', ' ', ';', '.', '_', "'", '.', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '.', '-', "'", ' ', ' ', ' ', ' ', ' ', ' '], [' ', ' ', ' ', '(', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '\\', '-', '.', '/', ' ', ';', '.', '-', ';', ' ', ' ', ' ', ' '], [' ', ' ', ' ', ' ', ';', ' ', '_', ' ', ' ', ' ', ' ', ' ', ' ', '|', "'", '-', '-', ',', '|', ' ', '`', ' ', ' ', "'", '<', ' ', '_', '_', '_', ','], [' ', ' ', ' ', ' ', ' ', ' ', '_', '_', ')', ' ', ' ', ' ', ' ', ' ', '\\', '`', '-', '.', '_', '_', '.', ' ', ' ', ' ', '/', '`', '.', '-', "'", '/'], [
@@ -307,9 +457,19 @@ class Enemy(Person):
         self.set_y(TOTAL_WIDTH-9)
 
     def place_dragon(self, Frame, Person):
+        """
+
+        Args:
+          Frame: Frame object to place dragon on it.
+          Person: Person object to place Dragon according to Mandalorian.
+
+        Returns:
+            None
+
+        """
         locs = 0
         locs = Person.get_y()+random.randint(-3, 3)
-        if(locs < 22):
+        if locs < 22:
             self.set_y(locs)
             Frame.user_frame[locs:locs+8,
                              DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.__drgaon
@@ -320,4 +480,12 @@ class Enemy(Person):
                              DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.__drgaon
 
     def fire_ice(self, Frame):
+        """
+
+        Args:
+          Frame: Frame object to show ice balls.
+
+        Returns:
+
+        """
         Frame.ice_balls.append(Iceballs(self.get_x()+1, self.get_y()+5))
