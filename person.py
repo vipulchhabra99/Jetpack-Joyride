@@ -1,4 +1,4 @@
-'''Person module containg methods and varaibles for runner and enemies'''
+"""Person module containg methods and varaibles for runner and enemies."""
 import signal
 import numpy as np
 from input import _getChUnix as getChar
@@ -10,7 +10,7 @@ from firing import *
 
 
 class Person:
-    """Person class used for Mandalorain on screen"""
+    """Person class used for Mandalorain on screen."""
 
     def __init__(self):
         self.__person = np.array(
@@ -55,11 +55,11 @@ class Person:
         self.__boostdur -= 1
 
     def get_person(self):
-        """Used to get structure of mandalorain. """
+        """Used to get structure of mandalorain."""
         return self.__person
 
     def get_magnetx(self):
-        """Used to get position of magnet. """
+        """Used to get position of magnet."""
         return self.__magnetposx
 
     def set_magnetx(self, value):
@@ -85,7 +85,7 @@ class Person:
         self.__positionx = value
 
     def get_y(self):
-        """ Used to get y coordinate of the Mandalorain. """
+        """Used to get y coordinate of the Mandalorain."""
         return self.__positiony
 
     def set_y(self, value):
@@ -98,7 +98,7 @@ class Person:
         self.__positiony = value
 
     def deactivate_shield(self):
-        """ Used to deactivate shield of the Mandalorain."""
+        """Used to deactivate shield of the Mandalorain."""
         self.__shield_activate = False
 
     def check_shield(self):
@@ -122,7 +122,7 @@ class Person:
         return self.__boost
 
     def change_boostflag(self):
-        """Used to change boost flag of Mandalorain. """
+        """Used to change boost flag of Mandalorain."""
         self.__boost = False
 
     def show_score(self):
@@ -152,7 +152,7 @@ class Person:
         self.__magnetflag = False
 
     def check_magnet_flag(self):
-        """Used to get value of magnet flag. """
+        """Used to get value of magnet flag."""
         return self.__magnetflag
 
     def show_flag(self):
@@ -176,14 +176,14 @@ class Person:
         for i in range(3):
             for j in range(3):
 
-                if(base_frame.frame[posx+i][posy+j] == '=' or
-                   base_frame.frame[posx+i][posy+j] == '|'):
+                if(base_frame.get_particular_frame(posx+i,posy+j) == '=' or
+                   base_frame.get_particular_frame(posx+i,posy+j) == '|'):
                     return 'obstacle'
 
-                elif base_frame.frame[posx+i][posy+j] == '$':
+                elif base_frame.get_particular_frame(posx+i,posy+j) == '$':
                     score += 1
-                    base_frame.frame[posx+i][posy+j] = ' '
-                    base_frame.user_frame[posx+i][posy+j] = ' '
+                    base_frame.set_frame_scene(posx+i,posy+j,' ')
+                    base_frame.set_user_frame(posx+i,posy+j,' ')
 
         return score
 
@@ -205,14 +205,18 @@ class Person:
                 x_cor = self.__positionx
                 y_cor = self.__positiony
                 person = self.__person
-                base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = person
+                for i in range(3):
+                    for j in range(3):
+                        base_frame.set_user_frame(y_cor+i,x_cor+j,person[i][j])
 
             else:
                 self.__positionx = base_frame.get_frame()
                 x_cor = base_frame.get_frame()
                 y_cor = self.__positiony
                 person = self.__person
-                base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = person
+                for i in range(3):
+                    for j in range(3):
+                        base_frame.set_user_frame(y_cor+i, x_cor+j,person[i][j])
 
         else:
             self.__positionx = DRAGON_PLACE_X-3
@@ -220,21 +224,25 @@ class Person:
                 x_cor = self.__positionx
                 y_cor = self.__positiony
                 person = self.__person
-                base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = person
+                for i in range(3):
+                    for j in range(3):
+                        base_frame.set_user_frame(y_cor+i, x_cor+j,person[i][j])
 
             else:
                 self.__positionx = base_frame.get_frame()
                 y_cor = self.__positiony
                 x_cor = base_frame.get_frame()
                 person = self.__person
-                base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = person
+                for i in range(3):
+                    for j in range(3):
+                        base_frame.set_user_frame(y_cor+i, x_cor+j,person[i][j])
 
     def show_life(self):
         """Used to get value of life of Mandalorian."""
         return self.__life
 
     def decrease_life(self):
-        """Used to decrease value of life of Mandalorian. """
+        """Used to decrease value of life of Mandalorian."""
         self.__life -= 1
 
     def speedboost_check(self, posx, posy, Frame):
@@ -252,9 +260,9 @@ class Person:
 
         for i in range(3):
             for j in range(3):
-                if Frame.frame[posx+i][posy+j] == 'S':
-                    Frame.frame[posx+i][posy+j] = ' '
-                    Frame.user_frame[posx+i][posy+j] = ' '
+                if Frame.get_particular_frame(posx+i,posy+j) == 'S':
+                    Frame.set_frame_scene(posx+i,posy+j,' ')
+                    Frame.set_user_frame(posx+i,posy+j,' ')
                     return True
 
     def reset_person(self, base_frame):
@@ -270,12 +278,16 @@ class Person:
         if base_frame.get_frame() <= self.__positionx:
             x_cor = self.__positionx
             y_cor = self.__positiony
-            base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = " "
+            for i in range(3):
+                for j in range(3):
+                    base_frame.set_user_frame(y_cor+i, x_cor+j,' ')
 
         else:
             y_cor = self.__positiony
             x_cor = base_frame.get_frame()
-            base_frame.user_frame[y_cor:y_cor+3, x_cor:x_cor+3] = " "
+            for i in range(3):
+                for j in range(3):
+                    base_frame.set_user_frame(y_cor+i, x_cor+j," ")
 
     def gravity(self, Frame):
         """
@@ -335,7 +347,6 @@ class Person:
               timeout:  (Default value = 0.1)
 
             Returns:
-
             """
             signal.signal(signal.SIGALRM, alarmhandler)
             signal.setitimer(signal.ITIMER_REAL, timeout)
@@ -434,8 +445,7 @@ class Person:
                 self.__positionx -= 1
         elif char == 'b':
             self.__jetflag = 0
-            Frame.bullets.append(
-                Bullet(self.__positionx+1, self.__positiony+1))
+            Frame.add_bullet(Bullet(self.__positionx+1, self.__positiony+1))
 
         elif char.isspace():
             self.__jetflag = 0
@@ -471,13 +481,15 @@ class Enemy(Person):
         locs = Person.get_y()+random.randint(-3, 3)
         if locs < 22:
             self.set_y(locs)
-            Frame.user_frame[locs:locs+8,
-                             DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.__drgaon
+            for i in range(8):
+                for j in range(30):
+                    Frame.set_user_frame(locs+i,DRAGON_PLACE_X+j,self.__drgaon[i][j])
 
         else:
             self.set_y(TOTAL_WIDTH-9)
-            Frame.user_frame[TOTAL_WIDTH-9:TOTAL_WIDTH-1,
-                             DRAGON_PLACE_X:DRAGON_PLACE_X+30] = self.__drgaon
+            for i in range(8):
+                for j in range(30):
+                    Frame.set_user_frame(TOTAL_WIDTH-9+i,DRAGON_PLACE_X+j,self.__drgaon[i][j])
 
     def fire_ice(self, Frame):
         """
@@ -488,4 +500,4 @@ class Enemy(Person):
         Returns:
 
         """
-        Frame.ice_balls.append(Iceballs(self.get_x()+1, self.get_y()+5))
+        Frame.add_ice_balls(Iceballs(self.get_x()+1, self.get_y()+5))

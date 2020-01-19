@@ -10,7 +10,7 @@ class Bullet:
         self.__status = True
 
     def on_frame(self,x,Frame):
-        Frame.user_frame[self.__y][x] = self.__bullet
+        Frame.set_user_frame(self.__y,x,self.__bullet)
 
     def forward(self):
         self.__x += self.__velocityx
@@ -31,11 +31,12 @@ class Bullet:
         return self.__status
     
     def bullet_remove(self,Frame):
-        Frame.user_frame[self.__y][self.__x] = ' '
+        Frame.set_user_frame(self.__y,self.__x,' ')
         self.__status = False
 
     def bullet_collision(self, posx, posy, Frame, Enemy):
-        for obs in Frame.obstacles_placed:
+        obstacles_list = Frame.get_obstacles()
+        for obs in obstacles_list:
             if(obs[3].check_status() is True and ([posx, posy] in obs[0:3] or [posx, posy-1] in obs[0:3] or [posx, posy+1] in obs[0:3])):
                 obs[3].remove_obstacle(obs[3].get_x(), obs[3].get_y(), Frame)
                 return 2
@@ -64,7 +65,7 @@ class Iceballs(Bullet):
         self.__velocity = ICE_BALL_VELOCITY
 
     def on_frame(self,Frame):
-        Frame.user_frame[self.get_y()][self.get_x()] = self.__iceballs
+        Frame.set_user_frame(self.get_y(),self.get_x(),self.__iceballs)
 
     def forward(self):
         self.set_x(self.get_x()-self.__velocity)

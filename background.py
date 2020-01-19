@@ -16,4 +16,6 @@ class background:
             j = random.randint(30,50)
             i += j
             y = random.randint(1,3)
-            Frame.frame[y+1:y+3,i+1:i+5] = self.__clouds
+            for xx in range(2):
+                for xy in range(4):
+                    Frame.set_frame_scene(y+1+xx,i+1+xy,self.__clouds[xx][xy])

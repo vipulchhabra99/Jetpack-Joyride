@@ -1,4 +1,4 @@
-''' Module containing obtacle class and respective functions'''
+"""Module containing obtacle class and respective functions."""
 import random
 import numpy as np
 from config import TOTAL_GAME_FRAME, MAGNET_SPEED
@@ -17,7 +17,7 @@ class Obstacles:
         self.__active = False
 
     def check_status(self):
-        """Used to check status of the obstacle. """
+        """Used to check status of the obstacle."""
         return self.__active
 
     def set_status(self, value):
@@ -48,23 +48,23 @@ class Obstacles:
         self.__locy = value
 
     def get_x(self):
-        """ Getter function for the x coordinate of obstacle. """
+        """Getter function for the x coordinate of obstacle."""
         return self.__locx
 
     def get_y(self):
-        """Getter function for the x coordinate of obstacle. """
+        """Getter function for the x coordinate of obstacle."""
         return self.__locy
 
 
 class horizontal_obstacle(Obstacles):
-    """Horizontal obstacle being inherited from obstacle. """
+    """Horizontal obstacle being inherited from obstacle."""
 
     def __init__(self, x, y):
         self.__obstacle = np.array(['=', '=', '='])
         Obstacles.__init__(self, x, y)
 
     def get_obstacle(self):
-        """Used to get value of obstacle. """
+        """Used to get value of obstacle."""
         return self.__obstacle
 
     def remove_obstacle(self, posx, posy, base_frame):
@@ -78,19 +78,19 @@ class horizontal_obstacle(Obstacles):
         """
         self.set_status(False)
         for i in range(3):
-            base_frame.frame[posx][posy+i] = ' '
-            base_frame.user_frame[posx][posy+i] = ' '
+            base_frame.set_frame_scene(posx,posy+i,' ')
+            base_frame.set_user_frame(posx,posy+i,' ')
 
 
 class vertical_obstacle(Obstacles):
-    """Vertical obstacle being inherited from obstacle. """
+    """Vertical obstacle being inherited from obstacle."""
 
     def __init__(self, x, y):
         self.__obstacle = np.array(['|', '|', '|'])
         Obstacles.__init__(self, x, y)
 
     def get_obstacle(self):
-        """Used to get value of obstacle. """
+        """Used to get value of obstacle."""
         return self.__obstacle
 
     def remove_obstacle(self, posx, posy, base_frame):
@@ -104,19 +104,19 @@ class vertical_obstacle(Obstacles):
         """
         self.set_status(False)
         for i in range(3):
-            base_frame.frame[posx+i][posy] = ' '
-            base_frame.user_frame[posx+i][posy] = ' '
+            base_frame.set_frame_scene(posx+i,posy,' ')
+            base_frame.set_user_frame(posx+i,posy,' ')
 
 
 class new_obstacle(Obstacles):
-    """45 Degree obstacle being inherited from obstacle.  """
+    """45 Degree obstacle being inherited from obstacle."""
 
     def __init__(self, x, y):
         self.__obstacle = np.array(['=', '=', '='])
         Obstacles.__init__(self, x, y)
 
     def get_obstacle(self):
-        """Used to get value of obstacle. """
+        """Used to get value of obstacle."""
         return self.__obstacle
 
     def remove_obstacle(self, posx, posy, base_frame):
@@ -131,19 +131,19 @@ class new_obstacle(Obstacles):
         self.set_status(False)
 
         for i in range(3):
-            base_frame.frame[posx+i][posy+i] = ' '
-            base_frame.user_frame[posx+i][posy+i] = ' '
+            base_frame.set_frame_scene(posx+i,posy+i,' ')
+            base_frame.set_user_frame(posx+i,posy+i,' ')
 
 
 class Magnet(Obstacles):
-    """Magnet obstacle being inherited from obstacle. """
+    """Magnet obstacle being inherited from obstacle."""
 
     def __init__(self, x, y):
         self.__magnet = np.array([['|', '=', '|'], ['|', ' ', '|']])
         Obstacles.__init__(self, x, y)
 
     def get_magnet(self):
-        """Used to get value of magnet. """
+        """Used to get value of magnet."""
         return self.__magnet
 
     def magnet_on_frame(self, Frame):
@@ -155,11 +155,10 @@ class Magnet(Obstacles):
         """
         for i in range(2):
             for j in range(3):
-                Frame.user_frame[self.get_y()+i][self.get_x() +
-                                                 j] = self.__magnet[i][j]
+                Frame.set_user_frame(self.get_y()+i,self.get_x()+j,self.__magnet[i][j])
 
     def forward(self):
-        """Used to move the magnet forward. """
+        """Used to move the magnet forward."""
         self.set_x(self.get_x()+MAGNET_SPEED)
 
 
@@ -180,28 +179,30 @@ def obstacle_place(Frame):
         j = random.randint(10, 30)
         i += j
         y = random.randint(7, 25)
-        if np.array_equal(Frame.frame[y:y+4, i:i+4], empty_array):
+        if np.array_equal(Frame.get_frame_scene()[y:y+4, i:i+4], empty_array):
             choice = random.randint(1, 3)
 
             if choice == 1:
-                Frame.obstacles_placed.append(
+                Frame.add_obstacles(
                     [[y+1, i], [y+1, i+1], [y+1, i+2],
                      horizontal_obstacle(y+1, i)])
+                
+                obstacle_obj = Frame.get_obstacles()[-1][-1]
                 for zi in range(3):
-                    obs = Frame.obstacles_placed[-1][-1].get_obstacle()[zi]
-                    Frame.frame[y+1][i+zi] = obs
+                    obs = obstacle_obj.get_obstacle()[zi]
+                    Frame.set_frame_scene(y+1,i+zi,obs)
 
             elif choice == 2:
-                Frame.obstacles_placed.append(
-                    [[y, i+1], [y+1, i+1], [y+2, i+1],
-                     vertical_obstacle(y, i+1)])
+                Frame.add_obstacles([[y, i+1], [y+1, i+1], [y+2, i+1],vertical_obstacle(y, i+1)])
+                obstacle_obj = Frame.get_obstacles()[-1][-1]
                 for zi in range(3):
-                    obs = Frame.obstacles_placed[-1][-1].get_obstacle()[zi]
-                    Frame.frame[y+zi][i+1] = obs
+                    obs = obstacle_obj.get_obstacle()[zi]
+                    Frame.set_frame_scene(y+zi,i+1,obs)
 
             elif choice == 3:
-                Frame.obstacles_placed.append(
+                Frame.add_obstacles(
                     [[y, i], [y+1, i+1], [y+2, i+2], new_obstacle(y, i)])
+                obstacle_obj = Frame.get_obstacles()[-1][-1]
                 for zi in range(3):
-                    obs = Frame.obstacles_placed[-1][-1].get_obstacle()[zi]
-                    Frame.frame[y+zi][i+zi] = obs
+                    obs = obstacle_obj.get_obstacle()[zi]
+                    Frame.set_frame_scene(y+zi,i+zi,obs)

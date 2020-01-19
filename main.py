@@ -20,7 +20,8 @@ def bullet_printer(base_frame, Enemy):
     # To print the bullets that has been released
     # By the runner that are either unused or are
     # not on current running frame
-    for bullet in base_frame.bullets:
+    bullet_list = base_frame.get_bullets()
+    for bullet in bullet_list:
         if(base_frame.get_frame() <= bullet.get_x() < base_frame.get_frame()+100 and bullet.get_status() == True):
             bullet.forward()
             bullet.detect_collision(base_frame, Enemy)
@@ -34,7 +35,8 @@ def magnet_printer(magnet, frame):
 
 def ice_ball_printer(Frame, Runner):
     # To print the ice balls being released from dragon
-    for ice_ball in Frame.ice_balls:
+    ice_balls_list = Frame.get_ice_balls()
+    for ice_ball in ice_balls_list:
         if(ice_ball.get_status() == True and ice_ball.get_x() > STATIC_FRAME-FRAME_PER_SCENE):
             ice_ball.forward()
             ice_ball.check_collision(Frame, Runner)
@@ -74,8 +76,7 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     # Copy the background to frame
     for i in range(TOTAL_WIDTH):
         for j in range(FRAME_PER_SCENE):
-            Frame.user_frame[i][Frame.get_frame() +
-                                j] = Frame.frame[i][Frame.get_frame()+j]
+            Frame.set_user_frame(i,Frame.get_frame()+j,Frame.get_particular_frame(i,Frame.get_frame()+j))
 
     # Used To generate person on user frame and print the bullets
     Runner.generate_person(Frame, enemy)
@@ -116,43 +117,34 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     for i in range(TOTAL_WIDTH):
         for j in range(FRAME_PER_SCENE):
             if(i == 0 or i == TOTAL_WIDTH-1):
-                print("\u001b[31;1m"+Frame.user_frame[i]
-                      [Frame.get_frame()+j], end="")
+                print("\u001b[31;1m"+Frame.get_particular_user_frame(i,Frame.get_frame()+j),end="")
             else:
                 if((i == Runner.get_y() and j == Runner.get_x()+1-Frame.get_frame()) or (i == Runner.get_y()+1 and j == Runner.get_x()+1-Frame.get_frame())):
-                    print('\u001b[37m'+Frame.user_frame[i]
-                          [Frame.get_frame()+j], end="")
-                elif(Frame.user_frame[i][Frame.get_frame()+j] == '@'):
-                    print('\u001b[38;5;50m'+Frame.user_frame[i]
-                          [Frame.get_frame()+j], end="")
+                    print('\u001b[37m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
+                elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '@'):
+                    print('\u001b[38;5;50m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
-                elif(Frame.user_frame[i][Frame.get_frame()+j] == '$'):
-                    print('\u001b[38;5;226m'+Frame.user_frame[i]
-                          [Frame.get_frame()+j], end="")
+                elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '$'):
+                    print('\u001b[38;5;226m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
-                elif(Frame.user_frame[i][Frame.get_frame()+j] == '|' or Frame.user_frame[i][Frame.get_frame()+j] == '='):
-                    print('\u001b[38;5;202m'+Frame.user_frame[i]
-                          [Frame.get_frame()+j], end="")
+                elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '|' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '='):
+                    print('\u001b[38;5;202m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
-                elif(Frame.user_frame[i][Frame.get_frame()+j] == 'S'):
-                    print('\u001b[32;1m'+Frame.user_frame[i]
-                          [Frame.get_frame()+j], end="")
+                elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == 'S'):
+                    print('\u001b[32;1m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
-                elif(Frame.user_frame[i][Frame.get_frame()+j] == '*'):
-                    print('\u001b[38;5;172m'+Frame.user_frame[i]
-                          [Frame.get_frame()+j], end="")
+                elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '*'):
+                    print('\u001b[38;5;172m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
-                elif(Frame.user_frame[i][Frame.get_frame()+j] == '#'):
-                    print('\u001b[38;5;50m'+Frame.user_frame[i]
-                          [Frame.get_frame()+j], end="")
+                elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '#'):
+                    print('\u001b[38;5;50m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
                 elif(Frame.get_frame()+j >= DRAGON_PLACE_X):
-                    print('\u001b[32;1m'+Frame.user_frame[i]
-                          [Frame.get_frame()+j], end="")
+                    print('\u001b[32;1m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
                 else:
                     print(Fore.WHITE +
-                          Frame.user_frame[i][Frame.get_frame()+j], end="")
+                          Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
         print()
 
     print()
