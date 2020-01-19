@@ -102,7 +102,7 @@ class Person:
         self.__shield_activate = False
 
     def check_shield(self):
-        """Used to check shield remaining of the Mandalorain."""
+        """Used to check shield status of the Mandalorain."""
         return self.__shield_activate
 
     def show_shield(self):

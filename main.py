@@ -119,8 +119,18 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
             if(i == 0 or i == TOTAL_WIDTH-1):
                 print("\u001b[31;1m"+Frame.get_particular_user_frame(i,Frame.get_frame()+j),end="")
             else:
-                if((i == Runner.get_y() and j == Runner.get_x()+1-Frame.get_frame()) or (i == Runner.get_y()+1 and j == Runner.get_x()+1-Frame.get_frame())):
+                if(((i == Runner.get_y() and j == Runner.get_x()+1-Frame.get_frame()) or (i == Runner.get_y()+1 and j == Runner.get_x()+1-Frame.get_frame())) and Runner.check_shield() is False):
                     print('\u001b[37m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
+
+                elif(((i == Runner.get_y() and j == Runner.get_x()+1-Frame.get_frame()) or (i == Runner.get_y()+1 and j == Runner.get_x()+1-Frame.get_frame())) and Runner.check_shield() is True):
+                    print('\u001b[38;5;84m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
+
+                elif((Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '/' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '\\' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '-') and Runner.check_shield() is False):
+                    print('\u001b[37m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
+
+                elif((Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '/' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '\\' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '-') and Runner.check_shield() is True):
+                    print('\u001b[38;5;84m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
+                
                 elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '@'):
                     print('\u001b[38;5;50m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
