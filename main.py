@@ -10,6 +10,7 @@ import sys
 from obstacles import *
 from config import *
 import time
+from colorama import Fore
 from firing import *
 
 np.set_printoptions(threshold=sys.maxsize)
