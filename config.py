@@ -1,3 +1,4 @@
+''' Configurations for the variables used in the program'''
 TOTAL_GAME_FRAME = 710
 TOTAL_WIDTH = 31
 FRAME_PER_SCENE = 100
