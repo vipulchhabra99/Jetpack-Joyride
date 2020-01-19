@@ -35,12 +35,24 @@ class Bullet:
         Frame.user_frame[self.__y][self.__x] = ' '
         self.__status = False
 
+    def bullet_collision(self, posx, posy, Frame, Enemy):
+        for obs in Frame.obstacles_placed:
+            if(obs[3].check_status() is True and ([posx, posy] in obs[0:3] or [posx, posy-1] in obs[0:3] or [posx, posy+1] in obs[0:3])):
+                obs[3].remove_obstacle(obs[3].get_x(), obs[3].get_y(), Frame)
+                return 2
+
+    def dragon_bullet(self, posx, posy, Enemy):
+        for i in range(8):
+            for j in range(30):
+                if(Enemy.get_y()+i == posy and Enemy.get_x()+j == posx):
+                    return 3
+
     def detect_collision(self,Frame,Enemy):
-        if(bullet_collision(self.__y,self.__x,Frame,Enemy) == 2):
+        if(self.bullet_collision(self.__y,self.__x,Frame,Enemy) == 2):
             self.bullet_remove(Frame)
 
         else:
-            if(dragon_bullet(self.__x,self.__y,Enemy) == 3):
+            if(self.dragon_bullet(self.__x,self.__y,Enemy) == 3):
                 self.bullet_remove(Frame)
                 Enemy.decrease_life()
         

@@ -117,8 +117,6 @@ def obstacle_place(Frame):
                     Frame.frame[y+zi][i+1] = Frame.obstacles_placed[-1][-1].get_obstacle()[zi]
 
             elif(choice == 3):
-                pass
-                #base_frame[y:y+3,i:i+3] = ob3().obstacle
                 Frame.obstacles_placed.append([[y,i],[y+1,i+1],[y+2,i+2],new_obstacle(y,i)])
                 for zi in range(3):
                     Frame.frame[y+zi][i+zi] = Frame.obstacles_placed[-1][-1].get_obstacle()[zi]

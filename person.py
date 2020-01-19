@@ -85,6 +85,22 @@ class Person:
     def show_flag(self):
         return self.__jetflag
 
+    def check_constraint(self,posx, posy, base_frame):
+        score = 0
+    
+        for i in range(3):
+            for j in range(3):
+
+                if(base_frame.frame[posx+i][posy+j] == '=' or base_frame.frame[posx+i][posy+j] == '|'):
+                    return 'obstacle'
+
+                elif(base_frame.frame[posx+i][posy+j] == '$'):
+                    score += 1
+                    base_frame.frame[posx+i][posy+j] = ' '
+                    base_frame.user_frame[posx+i][posy+j] = ' '
+
+        return score
+
     def generate_person(self,base_frame,Enemy):
 
         if(DRAGON_PLACE_X-2 > self.__positionx):
@@ -120,10 +136,15 @@ class Person:
 
     def gravity(self,Frame):
         if(self.__positiony < 27):
-            if(check_obstacle(self.__positiony+1,self.__positionx,Frame) and self.__shield_activate is False):
+            value = self.check_constraint(self.__positiony+1,self.__positionx,Frame)
+            if(value is 'obstacle' and self.__shield_activate is False):
                 print("GAME OVER !")
                 quit()
-            self.__score += check_constraint(self.__positiony+1,self.__positionx,Frame)
+
+            elif(value is 'obstacle' and self.__shield_activate is True):
+                    value = 0
+
+            self.__score += value
             if(speedboost_check(self.__positiony+1,self.__positionx,Frame)):
                 self.__boost = True
             self.reset_person(Frame)
@@ -155,10 +176,15 @@ class Person:
 
         elif char == 'd':
             if(self.__positionx - Frame.get_frame() < 97):
-                if(check_obstacle(self.__positiony,self.__positionx+1,Frame) and self.__shield_activate is False):
+                value = self.check_constraint(self.__positiony,self.__positionx+1,Frame)
+                if(value is 'obstacle' and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.__positiony,self.__positionx+1,Frame)
+
+                elif(value is 'obstacle' and self.__shield_activate is True):
+                    value = 0
+
+                self.__score += value
                 if(speedboost_check(self.__positiony,self.__positionx+1,Frame)):
                     self.__boost = True
                 self.reset_person(Frame)
@@ -167,10 +193,15 @@ class Person:
         
         elif char == 'w':
             if(self.__positiony > 1):
-                if(check_obstacle(self.__positiony-1,self.__positionx,Frame) and self.__shield_activate is False):
+                value = self.check_constraint(self.__positiony-1,self.__positionx,Frame)
+                if(value is 'obstacle' and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.__positiony-1,self.__positionx,Frame)
+
+                elif(value is 'obstacle' and self.__shield_activate is True):
+                    value = 0
+
+                self.__score += value
                 if(speedboost_check(self.__positiony-1,self.__positionx,Frame)):
                     self.__boost = True                                
                 self.reset_person(Frame)
@@ -179,10 +210,15 @@ class Person:
 
         elif char == 's':
             if(self.__positiony < 27):
-                if(check_obstacle(self.__positiony+1,self.__positionx,Frame) and self.__shield_activate is False):
+                value = self.check_constraint(self.__positiony+1,self.__positionx,Frame)
+                if(value is 'obstacle' and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.__positiony+1,self.__positionx,Frame)
+                
+                elif(value is 'obstacle' and self.__shield_activate is True):
+                    value = 0
+
+                self.__score += value
                 if(speedboost_check(self.__positiony+1,self.__positionx,Frame)):
                     self.__boost = True 
                 self.reset_person(Frame)
@@ -190,10 +226,15 @@ class Person:
 
         elif char == 'a':
             if(self.__positionx - Frame.get_frame() > 0):
-                if(check_obstacle(self.__positiony,self.__positionx-1,Frame) and self.__shield_activate is False):
+                value = self.check_constraint(self.__positiony,self.__positionx-1,Frame)
+                if(value is 'obstacle' and self.__shield_activate is False):
                     print("GAME OVER !")
                     quit()
-                self.__score += check_constraint(self.__positiony,self.__positionx-1,Frame)               
+
+                elif(value is 'obstacle' and self.__shield_activate is True):
+                    value = 0
+
+                self.__score += value             
                 if(speedboost_check(self.__positiony,self.__positionx-1,Frame)):
                     self.__boost = True                
                 self.reset_person(Frame)

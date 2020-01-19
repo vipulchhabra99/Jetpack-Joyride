@@ -6,7 +6,7 @@ from config import *
 class background:
 
     def __init__(self):
-        self.clouds = np.array([[' ','@','@',' '],['@','@','@','@']])
+        self.__clouds = np.array([[' ','@','@',' '],['@','@','@','@']])
 
     def place_background(self,Frame):
         
@@ -16,4 +16,4 @@ class background:
             j = random.randint(30,50)
             i += j
             y = random.randint(1,3)
-            Frame.frame[y+1:y+3,i+1:i+5] = self.clouds
+            Frame.frame[y+1:y+3,i+1:i+5] = self.__clouds
