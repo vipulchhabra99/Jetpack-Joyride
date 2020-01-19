@@ -1,6 +1,7 @@
 import numpy as np
 import random
 from config import *
+from rewards import *
 
 class base_frame:
 
@@ -47,6 +48,43 @@ class base_frame:
 
     def getGameRun(self):
         return self.__game_run
+
+    def place_rewards(self):    
+        #self.generate_series()
+        i = 10
+        j = 0
+
+        while(i < TOTAL_GAME_FRAME-220):
+
+            choice = random.randint(1, 4)
+            # Random location to place on frame
+            j = random.randint(10,25)
+            i += j
+
+            if(choice != 4):
+                # Rewards Object
+                reward = Rewards()
+                reward.generate_series()
+                reward.set_choice(choice)
+
+                if choice == 1:
+                    y = random.randint(6,20)
+                    self.frame[y:y+3,i:i+8] = reward.get_series1()
+
+                elif choice == 2:
+                    y = random.randint(6,23)
+                    self.frame[y,i:i+8] = reward.get_series2()   
+
+                elif choice == 3:
+                    y = random.randint(6,20)
+                    self.frame[y:(y+8),i:(i+8)] = reward.get_series3()
+
+            else:
+                    
+                reward = speed_boost()
+                self.frame[y][i] = reward.get_boost()
+
+                    
 
 
 

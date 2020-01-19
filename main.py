@@ -47,8 +47,7 @@ Frame = base_frame()
 boundary = Frame.generate_boundary()
 Runner = Person()
 iteration = 0  # No of iterations passed while game running
-Runner.place_rewards(Frame)
-Runner.place_speedboost(Frame)
+Frame.place_rewards()
 obstacle_place(Frame)
 cloud = background()
 cloud.place_background(Frame)
@@ -183,7 +182,7 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     else:
         boost_check = 0
         Runner.change_boostflag()
-        if(iteration % 2 == 0 and Frame.get_frame() < STATIC_FRAME):
+        if(iteration % 5 == 0 and Frame.get_frame() < STATIC_FRAME):
             Frame.increase_frame()
             Frame.decrease_time()
     

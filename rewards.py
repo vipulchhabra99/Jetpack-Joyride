@@ -1,4 +1,3 @@
-from base_frame import base_frame 
 import random
 import numpy as np
 from config import *
@@ -8,17 +7,10 @@ from colorama import Fore, Back, Style
 class speed_boost:
     
     def __init__(self):
-        self.boost = 'S'
+        self.__boost = 'S'
 
-    def place_boost(self,Frame):
-            
-        i = 0
-        while(i < TOTAL_GAME_FRAME - 70):
-            j = random.randint(50, 70)
-            i += j
-            y = random.randint(4,25)
-            if(Frame.frame[y][i] == ' '):
-                Frame.frame[y][i] = self.boost
+    def get_boost(self):
+        return self.__boost
 
 class Rewards: 
 
@@ -28,6 +20,7 @@ class Rewards:
          self.__series1 = []
          self.__series2 = []
          self.__series3 = []
+         self.__choice = 0
 
     def generate_series(self):
         for i in range(3):
@@ -43,8 +36,6 @@ class Rewards:
 
         self.__series2 = np.array(self.__series2)
 
-        #print(self.__series2)
-
         for i in range(8):
             inter_row = []
             for j in range(8):
@@ -56,42 +47,17 @@ class Rewards:
         
         self.__series3 = np.array(self.__series3)
 
-    def board_place(self,Frame):
+    def get_series1(self):
+        return self.__series1
 
-        self.generate_series()
-        
-        i = 10
-        j = 0
+    def get_series2(self):
+        return self.__series2
 
-        while(i < TOTAL_GAME_FRAME-220):
-            
-            choice = random.randint(1, 3)
-            j = random.randint(10,30)
-            i += j
+    def get_series3(self):
+        return self.__series3
 
-            if choice == 1:
-                y = random.randint(6,20)
-                Frame.frame[y:y+3,i:i+8] = self.__series1
-                #for xi in range(3):
-                    #for zi in range(8):
-                        #base_frame.frame[y+xi][i+zi] = self.__series1[xi][zi]
-                        #print(self.__series1[xi][zi])
+    def set_choice(self,choice):
+        self.__choice = choice
 
-            elif choice == 2:
-                y = random.randint(6,23)
-
-                Frame.frame[y,i:i+8] = self.__series2    
-                #for zi in range(8):
-                    #print(self.__series2[zi])
-
-                        #base_frame.frame[y+xi][i+zi] = self.__series2[xi][zi]
-                #base_frame.frame[y:(y+1),i:(i+8)] = self.__series2
-
-            elif choice == 3:
-                y = random.randint(6,20)
-                #for xi in range(8):
-                    #for zi in range(8):
-                        #print(self.__series3[xi][zi])
-                        #base_frame.frame[y+xi][i+zi] = self.__series3[xi][zi]
-                Frame.frame[y:(y+8),i:(i+8)] = self.__series3
-
+    def get_choice(self):
+        return self.__choice
