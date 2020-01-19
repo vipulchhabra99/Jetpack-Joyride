@@ -4,7 +4,6 @@ import signal
 import numpy as np
 from rewards import *
 from alarmexception import AlarmException
-from constraint_checker import *
 from config import *
 from firing import *
 
@@ -126,6 +125,15 @@ class Person:
 
     def decrease_life(self):
         self.__life -= 1
+    
+    def speedboost_check(self,posx, posy, Frame):
+    
+        for i in range(3):
+            for j in range(3):
+                if(Frame.frame[posx+i][posy+j] == 'S'):
+                    Frame.frame[posx+i][posy+j] = ' '
+                    Frame.user_frame[posx+i][posy+j] = ' '
+                    return True
 
     def reset_person(self,base_frame):
         if(base_frame.get_frame() <= self.__positionx):
@@ -145,7 +153,7 @@ class Person:
                     value = 0
 
             self.__score += value
-            if(speedboost_check(self.__positiony+1,self.__positionx,Frame)):
+            if(self.speedboost_check(self.__positiony+1,self.__positionx,Frame)):
                 self.__boost = True
             self.reset_person(Frame)
             self.__positiony += 1
@@ -185,7 +193,7 @@ class Person:
                     value = 0
 
                 self.__score += value
-                if(speedboost_check(self.__positiony,self.__positionx+1,Frame)):
+                if(self.speedboost_check(self.__positiony,self.__positionx+1,Frame)):
                     self.__boost = True
                 self.reset_person(Frame)
                 self.__jetflag = 0
@@ -202,7 +210,7 @@ class Person:
                     value = 0
 
                 self.__score += value
-                if(speedboost_check(self.__positiony-1,self.__positionx,Frame)):
+                if(self.speedboost_check(self.__positiony-1,self.__positionx,Frame)):
                     self.__boost = True                                
                 self.reset_person(Frame)
                 self.__positiony -=1
@@ -219,7 +227,7 @@ class Person:
                     value = 0
 
                 self.__score += value
-                if(speedboost_check(self.__positiony+1,self.__positionx,Frame)):
+                if(self.speedboost_check(self.__positiony+1,self.__positionx,Frame)):
                     self.__boost = True 
                 self.reset_person(Frame)
                 self.__positiony += 1
@@ -235,7 +243,7 @@ class Person:
                     value = 0
 
                 self.__score += value             
-                if(speedboost_check(self.__positiony,self.__positionx-1,Frame)):
+                if(self.speedboost_check(self.__positiony,self.__positionx-1,Frame)):
                     self.__boost = True                
                 self.reset_person(Frame)
                 self.__jetflag = 0

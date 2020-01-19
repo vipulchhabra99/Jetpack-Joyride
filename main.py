@@ -7,7 +7,6 @@ from obstacles import horizontal_obstacle, vertical_obstacle, new_obstacle
 from background import background
 import random
 import sys
-from constraint_checker import *
 from obstacles import *
 from config import *
 import time

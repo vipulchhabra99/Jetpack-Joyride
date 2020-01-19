@@ -1,5 +1,4 @@
 from base_frame import *
-from constraint_checker import *
 
 class Bullet:
     
@@ -70,8 +69,15 @@ class Iceballs(Bullet):
     def forward(self):
         self.set_x(self.get_x()-self.__velocity)
 
+    def iceball_collision(self,posx, posy, Frame, Person):
+    
+        for i in range(3):
+            for j in range(3):
+                if((Person.get_y()+i) == posx and (Person.get_x()+j) == posy):
+                    return 2
+
     def check_collision(self,Frame,Person):
-        if(iceball_collision(self.get_y(),self.get_x(),Frame,Person) == 2):
+        if(self.iceball_collision(self.get_y(),self.get_x(),Frame,Person) == 2):
             Person.decrease_life()
             self.change_status()
 
