@@ -54,7 +54,7 @@ cloud.place_background(Frame)
 magnet = Magnet(random.randint(MAGNET_LOCATION_MIN,
                                MAGNET_LOCATION_MAX), MAGNET_LOC_Y)
 mag_loc = magnet.get_x()
-Runner.magnetlocx = magnet.get_x()
+Runner.set_magnetx(magnet.get_x())
 magnet_period = 0  # This will used to define the period for which magnet has to be displayed
 boost_check = 0
 enemy = Enemy()
@@ -93,14 +93,14 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
         if(Runner.check_boost() == True and boost_check < 200):
             if(iteration % 2 == 0):
                 magnet.forward()
-                Runner.magnetlocx = magnet.get_x()
-                Runner.positionx = magnet.get_x()
+                Runner.set_magnetx(magnet.get_x())
+                Runner.set_x(magnet.get_x())
 
         else:
             if(iteration % 6 == 0):
                 magnet.forward()
-                Runner.magnetlocx = magnet.get_x()
-                Runner.positionx = magnet.get_x()
+                Runner.set_magnetx(magnet.get_x())
+                Runner.set_x(magnet.get_x())
 
     # When the magnet cross the period it would be reset
     if(magnet_period > 300):
@@ -122,7 +122,7 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
                 print("\u001b[31;1m"+Frame.user_frame[i]
                       [Frame.get_frame()+j], end="")
             else:
-                if((i == Runner.positiony and j == Runner.positionx+1-Frame.get_frame()) or (i == Runner.positiony+1 and j == Runner.positionx+1-Frame.get_frame())):
+                if((i == Runner.get_y() and j == Runner.get_x()+1-Frame.get_frame()) or (i == Runner.get_y()+1 and j == Runner.get_x()+1-Frame.get_frame())):
                     print('\u001b[37m'+Frame.user_frame[i]
                           [Frame.get_frame()+j], end="")
                 elif(Frame.user_frame[i][Frame.get_frame()+j] == '@'):

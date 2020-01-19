@@ -75,7 +75,7 @@ def iceball_collision(posx, posy, Frame, Person):
 
     for i in range(3):
         for j in range(3):
-            if((Person.positiony+i) == posx and (Person.positionx+j) == posy):
+            if((Person.get_y()+i) == posx and (Person.get_x()+j) == posy):
                 return 2
 
 
@@ -83,7 +83,7 @@ def dragon_bullet(posx, posy, Enemy):
 
     for i in range(8):
         for j in range(30):
-            if(Enemy.positiony+i == posy and Enemy.positionx+j == posx):
+            if(Enemy.get_y()+i == posy and Enemy.get_x()+j == posx):
                 return 3
 
 

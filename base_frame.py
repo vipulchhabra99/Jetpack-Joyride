@@ -82,6 +82,7 @@ class base_frame:
             else:
                     
                 reward = speed_boost()
+                y = random.randint(4, 24)
                 self.frame[y][i] = reward.get_boost()
 
                     
