@@ -91,14 +91,14 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
         Runner.decrease_magnetperiod()
 
         if(Runner.check_boost() == True and Runner.get_boostdur() > 0):
-            if(iteration % 2 == 0):
+            if(iteration % SPEED_FOR_BOOST == 0):
                 magnet.forward()
                 Runner.set_magnetx(magnet.get_x())
                 if(magnet.get_x()-magnet.get_range() <= Runner.get_x() <= magnet.get_x()+magnet.get_range()):
                     Runner.set_x(magnet.get_x())
 
         else:
-            if(iteration % 6 == 0):
+            if(iteration % SPEED == 0):
                 magnet.forward()
                 Runner.set_magnetx(magnet.get_x())
                 if(magnet.get_x()-magnet.get_range() <= Runner.get_x() <= magnet.get_x()+magnet.get_range()):
@@ -120,20 +120,24 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     # Print the frame on the screen with the aprropriate colors
     for i in range(TOTAL_WIDTH):
         for j in range(FRAME_PER_SCENE):
-            if(i == 0 or i == TOTAL_WIDTH-1):
-                print("\u001b[31;1m"+Frame.get_particular_user_frame(i,Frame.get_frame()+j),end="")
+            if(i == 0):
+                print("\u001b[38;5;39m"+Frame.get_particular_user_frame(i,Frame.get_frame()+j),end="")
+
+            elif(i == TOTAL_WIDTH-1):
+                print("\u001b[38;5;48m"+Frame.get_particular_user_frame(i,Frame.get_frame()+j),end="")
+
             else:
                 if(((i == Runner.get_y() and j == Runner.get_x()+1-Frame.get_frame()) or (i == Runner.get_y()+1 and j == Runner.get_x()+1-Frame.get_frame())) and Runner.check_shield() is False):
                     print('\u001b[37m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
                 elif(((i == Runner.get_y() and j == Runner.get_x()+1-Frame.get_frame()) or (i == Runner.get_y()+1 and j == Runner.get_x()+1-Frame.get_frame())) and Runner.check_shield() is True):
-                    print('\u001b[38;5;84m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
+                    print('\u001b[38;5;172m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
                 elif((Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '/' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '\\' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '-') and Runner.check_shield() is False):
                     print('\u001b[37m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
                 elif((Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '/' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '\\' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '-') and Runner.check_shield() is True):
-                    print('\u001b[38;5;84m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
+                    print('\u001b[38;5;172m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
                 
                 elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '@'):
                     print('\u001b[38;5;50m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
@@ -142,7 +146,7 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
                     print('\u001b[38;5;226m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
                 elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '|' or Frame.get_particular_user_frame(i,Frame.get_frame()+j) == '='):
-                    print('\u001b[38;5;202m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
+                    print('\u001b[38;5;196m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
 
                 elif(Frame.get_particular_user_frame(i,Frame.get_frame()+j) == 'S'):
                     print('\u001b[32;1m'+Frame.get_particular_user_frame(i,Frame.get_frame()+j), end="")
@@ -178,18 +182,18 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
     iteration += 1
 
     if(Runner.check_boost() == True and Runner.get_boostdur() > 0):
-        if(iteration % 2 == 0 and Frame.get_frame() < STATIC_FRAME):
+        if(iteration % SPEED_FOR_BOOST == 0 and Frame.get_frame() < STATIC_FRAME):
             Frame.increase_frame()
             Frame.decrease_time()
         Runner.decrease_boost()
     else:
         Runner.change_boostflag()
-        if(iteration % 5 == 0 and Frame.get_frame() < STATIC_FRAME):
+        if(iteration % SPEED == 0 and Frame.get_frame() < STATIC_FRAME):
             Frame.increase_frame()
             Frame.decrease_time()
 
     if(Frame.get_frame() >= STATIC_FRAME):
-        if(iteration % 5 == 0):
+        if(iteration % SPEED == 0):
             Frame.decrease_time()
 
     if(iteration % (1.5) == 0 and Runner.show_flag() == 0):
