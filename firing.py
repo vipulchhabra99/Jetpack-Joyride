@@ -74,7 +74,7 @@ class Iceballs(Bullet):
     
         for i in range(3):
             for j in range(3):
-                if((Person.get_y()+i) == posx and (Person.get_x()+j) == posy):
+                if(Person.check_shield() == False and (Person.get_y()+i) == posx and (Person.get_x()+j) == posy):
                     return 2
 
     def check_collision(self,Frame,Person):

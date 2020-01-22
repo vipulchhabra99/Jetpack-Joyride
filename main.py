@@ -12,6 +12,7 @@ from config import *
 import time
 from colorama import Fore
 from firing import *
+from endscreen import *
 
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -65,6 +66,7 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
 
     # Print the required stats of the game
     print("\033[0;0f")
+    os.system("tput civis")
     print("\n\n     SCORE : ", end="   ")
     print(Runner.show_score(), end="        ")
     print("      LIFE : ", end="    ")
@@ -92,13 +94,15 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
             if(iteration % 2 == 0):
                 magnet.forward()
                 Runner.set_magnetx(magnet.get_x())
-                Runner.set_x(magnet.get_x())
+                if(magnet.get_x()-magnet.get_range() <= Runner.get_x() <= magnet.get_x()+magnet.get_range()):
+                    Runner.set_x(magnet.get_x())
 
         else:
             if(iteration % 6 == 0):
                 magnet.forward()
                 Runner.set_magnetx(magnet.get_x())
-                Runner.set_x(magnet.get_x())
+                if(magnet.get_x()-magnet.get_range() <= Runner.get_x() <= magnet.get_x()+magnet.get_range()):
+                    Runner.set_x(magnet.get_x())
 
     # When the magnet cross the period it would be reset
     if(Runner.get_magnetperiod() == 0):
@@ -190,6 +194,16 @@ while(Frame.get_time() and Runner.show_life() and enemy.show_life()):
 
     if(iteration % (1.5) == 0 and Runner.show_flag() == 0):
         Runner.gravity(Frame)
+
+os.system('clear')
+
+if(Runner.show_life() > 0 and Frame.get_time() > 0 and enemy.show_life() == 0):
+    endscreen = EndScreen(1)
+    print(endscreen.get_text())
+
+else:
+    endscreen = EndScreen(2)
+    print(endscreen.get_text())
 
 
 print("GAME OVER !")

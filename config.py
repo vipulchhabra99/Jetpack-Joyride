@@ -1,4 +1,4 @@
-''' Configurations for the variables used in the program'''
+"""Configurations for the variables used in the program."""
 TOTAL_GAME_FRAME = 710
 TOTAL_WIDTH = 31
 FRAME_PER_SCENE = 100
@@ -11,3 +11,4 @@ ICE_BALL_VELOCITY = 2
 BULLET_VELOCITY = 2
 ICE_BALL_GRAVITY = 1
 MAGNET_SPEED = 1
+MAGNET_RANGE = 25

@@ -1,7 +1,7 @@
 """Module containing obtacle class and respective functions."""
 import random
 import numpy as np
-from config import TOTAL_GAME_FRAME, MAGNET_SPEED
+from config import TOTAL_GAME_FRAME, MAGNET_SPEED, MAGNET_RANGE
 
 
 class Obstacles:
@@ -140,7 +140,11 @@ class Magnet(Obstacles):
 
     def __init__(self, x, y):
         self.__magnet = np.array([['|', '=', '|'], ['|', ' ', '|']])
+        self.__range = MAGNET_RANGE
         Obstacles.__init__(self, x, y)
+
+    def get_range(self):
+        return self.__range
 
     def get_magnet(self):
         """Used to get value of magnet."""

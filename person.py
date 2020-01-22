@@ -7,7 +7,8 @@ from rewards import *
 from alarmexception import AlarmException
 from config import *
 from firing import *
-
+from endscreen import *
+import os
 
 class Person:
     """Person class used for Mandalorain on screen."""
@@ -303,6 +304,9 @@ class Person:
             value = self.check_constraint(
                 self.__positiony+1, self.__positionx, Frame)
             if(value is 'obstacle' and self.__shield_activate is False):
+                endscreen = EndScreen(2)
+                os.system('clear')
+                print(endscreen.get_text())
                 print("GAME OVER !")
                 quit()
 
@@ -370,6 +374,9 @@ class Person:
                 value = self.check_constraint(
                     self.__positiony, self.__positionx+1, Frame)
                 if(value is 'obstacle' and self.__shield_activate is False):
+                    endscreen = EndScreen(2)
+                    os.system('clear')
+                    print(endscreen.get_text())
                     print("GAME OVER !")
                     quit()
 
@@ -390,6 +397,9 @@ class Person:
                 value = self.check_constraint(
                     self.__positiony-1, self.__positionx, Frame)
                 if(value is 'obstacle' and self.__shield_activate is False):
+                    endscreen = EndScreen(2)
+                    os.system('clear')
+                    print(endscreen.get_text())
                     print("GAME OVER !")
                     quit()
 
@@ -410,6 +420,9 @@ class Person:
                 value = self.check_constraint(
                     self.__positiony+1, self.__positionx, Frame)
                 if(value is 'obstacle' and self.__shield_activate is False):
+                    endscreen = EndScreen(2)
+                    os.system('clear')
+                    print(endscreen.get_text())
                     print("GAME OVER !")
                     quit()
 
@@ -429,6 +442,9 @@ class Person:
                 value = self.check_constraint(
                     self.__positiony, self.__positionx-1, Frame)
                 if(value is 'obstacle' and self.__shield_activate is False):
+                    endscreen = EndScreen(2)
+                    os.system('clear')
+                    print(endscreen.get_text())
                     print("GAME OVER !")
                     quit()
 
